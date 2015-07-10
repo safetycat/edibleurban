@@ -32,9 +32,6 @@
 
         // initialise the draw control ad pass it the feature group of editable layers
         var drawControl = new L.Control.Draw({
-            edit: {
-                featureGroup: drawnItems
-            },
             draw: {
                 polyline : false,
                 rectangle: false,
@@ -48,6 +45,14 @@
                     shapeOptions      : {
                         color: '#000'
                     }
+                }
+            },
+            edit: {
+                featureGroup: drawnItems,
+                selectedPathOptions: {
+                    maintainColor: true,
+                    color: '#000',
+                    weight: 10
                 }
             }
         });
@@ -94,8 +99,9 @@
                 // Do marker specific actions
             }
             // Do whatever else you need to. (save to db, add to map etc)
-            map.addLayer(layer);
+            drawnItems.addLayer(layer);
             alert('persist to database');
+
         }
 
         // map.on('click', onMapClick);
