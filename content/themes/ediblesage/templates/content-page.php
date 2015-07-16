@@ -108,7 +108,7 @@
         map.on('draw:created', onDrawCreated);
 
 
-    } // end onload
+    } // end onload 
 
 </script>
 
