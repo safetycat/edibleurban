@@ -8,7 +8,7 @@
 
     window.onload = function() {
         // first we initialise the map and set its view to our chosen geographical coordinates and zoom level
-        var map = L.map('map').setView([51.505, -0.09], 13);
+        var map = L.map('map').setView([52.57, -0.25], 15);
         // notice that setView returns the ma object, most leaflet methods act like this for chaining
 
         // add a tile layer to the map. in this case the mapbox streets tile layer
@@ -62,28 +62,28 @@
 
 
 
-        var marker = L.marker([51.5, -0.09]).addTo(map);
+        // var marker = L.marker([51.5, -0.09]).addTo(map);
 
-        var circle = L.circle([51.508, -0.11], 500, {
-            color       : 'red',
-            fillColor   : '#f03',
-            fillOpacity : 0.5
-        }).addTo(map);
+        // var circle = L.circle([51.508, -0.11], 500, {
+        //     color       : 'red',
+        //     fillColor   : '#f03',
+        //     fillOpacity : 0.5
+        // }).addTo(map);
 
-        var polygon = L.polygon([
-            [51.509,-0.08],
-            [51.503,-0.06],
-            [51.51,-0.047]
-        ]).addTo(map);
+        // var polygon = L.polygon([
+        //     [51.509,-0.08],
+        //     [51.503,-0.06],
+        //     [51.51,-0.047]
+        // ]).addTo(map);
 
-        marker.bindPopup('A pretty CSS3 popup.<br> Easily customizable.').openPopup();
-        circle.bindPopup('I am a circle');
-        polygon.bindPopup('I am a polygon');
+        // marker.bindPopup('A pretty CSS3 popup.<br> Easily customizable.').openPopup();
+        // circle.bindPopup('I am a circle');
+        // polygon.bindPopup('I am a polygon');
 
-        var popup = L.popup() // stand alone pop up
-                .setLatLng([51.5,-0.15])
-                .setContent('I am a stand alone pop up')
-                .openOn(map);
+        // var popup = L.popup() // stand alone pop up
+        //         .setLatLng([51.5,-0.15])
+        //         .setContent('I am a stand alone pop up')
+        //         .openOn(map);
 
         function onMapClick(e) {
             popup.setLatLng(e.latlng)
@@ -100,7 +100,7 @@
             }
             // Do whatever else you need to. (save to db, add to map etc)
             drawnItems.addLayer(layer);
-            alert('persist to database');
+            alert('to do: save this to database');
 
         }
 
