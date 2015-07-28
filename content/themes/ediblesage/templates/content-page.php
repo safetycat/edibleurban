@@ -1,7 +1,20 @@
-<div id="map"></div>
+<div ng-app="wpApp">
 
-<?php the_content(); ?>
-<?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
+    <div id="map"></div>
+
+    <div ng-controller="PostListController">
+        <ul ng-repeat="post in postdata">
+            <li>{{post.title}}</li>
+            <li>{{post.content}}</li>
+            <li>{{post.geo_json}}</li>
+        </ul>
+        <hr />
+    </div>
+
+    <?php //the_content(); ?>
+    <?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
+
+</div>
 
 <script type="text/javascript">
 
@@ -16,13 +29,15 @@
         // the attribution text
         // the maximum zoom level
 
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom     : 18,
-            id          : 'some shit',
-            accessToken : 'blah'
-        }).addTo(map);
+        // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        //     attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        //     maxZoom     : 18,
+        //     id          : 'some shit',
+        //     accessToken : 'blah'
+        // }).addTo(map);
 
+
+        L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.mnohmk0a/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg').addTo(map);
 
 
 
@@ -111,6 +126,3 @@
     } // end onload 
 
 </script>
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.js"></script>
