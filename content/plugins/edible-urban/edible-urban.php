@@ -51,12 +51,32 @@ function edible_register_my_post_types() { // handler
   );
 }
 
+
 /**
+ * before serving set up custom  post type API
+ * this extends the existing wp-api plug in to
+ * accomodate our plot type's custom field(s)
+ */
+add_action( 'wp_json_server_before_serve', 'edible_api_init', 11, 1 );
+
+function edible_api_init($server) {
+    // we do the require here as we can be sure the WP_API plugin is loaded (which our class extends)
+    $api_config_path = dirname(__FILE__).'/includes/class-edible-urban-api-plot.php';
+
+    require_once $api_config_path;
+    $edibleUrban_API_Plot = new EdibleUrban_API_Plot($server);
+    $edibleUrban_API_Plot->register_filters();
+}
+
+/**
+ * when serving the JSON
  * add the custom field into the JSON (not done by default!)
+ * and remove anything we're not using
  */
 add_filter( 'json_prepare_post', 'edible_post_ammend' , 20, 3 );
 
 function edible_post_ammend( $data, $post, $context ) {
+
     $keys_to_remove = [  // the stuff listed here is stuff included by default that we don't need on the front-end
         'status',
         'type',
@@ -87,10 +107,3 @@ function edible_post_ammend( $data, $post, $context ) {
     }
     return $data;
 }
-
-
-
-
-
-
-

@@ -2,13 +2,15 @@
 
     <div id="map"></div>
 
-    <div ng-controller="PostListController">
-        <ul ng-repeat="post in postdata">
+    <div id="postlist" ng-controller="PostListController">
+
+        <ul ng-repeat="post in mapdata">
             <li>{{post.title}}</li>
             <li>{{post.content}}</li>
             <li>{{post.geo_json}}</li>
         </ul>
         <hr />
+
     </div>
 
     <?php //the_content(); ?>
@@ -115,6 +117,32 @@
             }
             // Do whatever else you need to. (save to db, add to map etc)
             drawnItems.addLayer(layer);
+
+            // communicate from leaflet to angular
+            var scope = angular.element(document.getElementById('postlist')).scope();
+
+            console.log( angular.element(document.getElementById('postlist')).scope() );
+
+            scope.$apply(function(){
+                var data = {
+                        title         :"Yes!",
+                        content       :"Content",
+                        geo_json      :JSON.stringify({
+                                         'type': 'Feature',
+                                         'geometry': {
+                                            'type': 'Point',
+                                            'coordinates': [125.6, 10.1]
+                                         },
+                                         'properties': {
+                                         'name': 'Rubbish' 
+                                         }
+                                        })
+                            };
+                scope.mapdata.push(data)
+            })
+
+            // alert(scope.returnHello());
+
             alert('to do: save this to database');
 
         }

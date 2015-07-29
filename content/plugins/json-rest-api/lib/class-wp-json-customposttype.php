@@ -29,6 +29,7 @@ abstract class WP_JSON_CustomPostType extends WP_JSON_Posts {
 	 * Construct the API handler object
 	 */
 	public function __construct(WP_JSON_ResponseHandler $server) {
+
 		if ( empty( $this->base ) ) {
 			_doing_it_wrong( 'WP_JSON_CustomPostType::__construct', __( 'The route base must be overridden' ), 'WPAPI-0.6' );
 			return;
@@ -37,8 +38,7 @@ abstract class WP_JSON_CustomPostType extends WP_JSON_Posts {
 			_doing_it_wrong( 'WP_JSON_CustomPostType::__construct', __( 'The post type must be overridden' ), 'WPAPI-0.6' );
 			return;
 		}
-
-		parent::__construct($server);
+		parent::__construct($server); // this happens and sets $this->server
 	}
 
 	/**
@@ -193,6 +193,7 @@ abstract class WP_JSON_CustomPostType extends WP_JSON_Posts {
 	 * @return array The prepared post data
 	 */
 	protected function prepare_post( $post, $context = 'view' ) {
+
 		$_post = parent::prepare_post( $post, $context );
 		if ( is_wp_error( $_post ) ) {
 			return $_post;

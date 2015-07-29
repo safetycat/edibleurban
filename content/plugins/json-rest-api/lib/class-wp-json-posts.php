@@ -15,7 +15,6 @@ class WP_JSON_Posts {
 	 */
 	public function __construct(WP_JSON_ResponseHandler $server) {
 		$this->server = $server;
-
 		$this->comments = new WP_JSON_Comments();
 	}
 
@@ -518,6 +517,7 @@ class WP_JSON_Posts {
 	 * @return array The prepared post data
 	 */
 	protected function prepare_post( $post, $context = 'view' ) {
+
 		// Holds the data for this post.
 		$_post = array( 'ID' => (int) $post['ID'] );
 
