@@ -31,8 +31,8 @@ wpApp.controller('PostListController', ['$scope', '$http', 'Plots', function($sc
   $scope.mapdata = [];
 
   $scope.$watch(function() { return $scope.mapdata; }, function() {
-    alert('map data changed');
-    console.dir(L);
+    console.log('map data changed');
+
     // initMap();              
     // // clear markers
     // for (var i = 0; i < markers.length; i++ ) {
@@ -48,32 +48,34 @@ wpApp.controller('PostListController', ['$scope', '$http', 'Plots', function($sc
     // });
   });
 
+  $scope.save = function(data) {
+    $http.post(
+      '/wp-json/plots',
+      data
+    ).success( function(data){
+        // unpack stringified json object
+        data.geo_json = JSON.parse(data.geo_json);
+        data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
+        $scope.mapdata.push(data);
+      } );
+  };
+
+  $http.get(
+    $scope.api + '/posts?type=plots'
+  ).success(function(data, status, headers, config){
+    $scope.mapdata = data;
+  });
 
 
-    $http.get(
-      $scope.api + '/posts?type=plots'
-    ).success(function(data, status, headers, config){
-      $scope.mapdata = data;
-
-      $http.post(
-        '/wp-json/plots',
-        {
-            title         :"Whatever!",
-            content_raw   :"Content",
-            plot          :JSON.stringify({
-                             'type': 'Feature',
-                             'geometry': {
-                                'type': 'Point',
-                                'coordinates': [125.6, 10.1]
-                             },
-                             'properties': {
-                             'name': 'Dinagat Islands' 
-                             }
-                            })
-        }).success( function(data){
-          $scope.mapdata.push(data);
-        } );
-
-    });
 
 }]);
+
+
+
+
+
+
+
+
+
+

@@ -26,7 +26,6 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
             return new WP_Error( 'json_post_invalid_type', __( 'Invalid post type' ), array( 'status' => 400 ) );
         }
 
-
         $retval = $this->insert_post( $data );
         if ( is_wp_error( $retval ) ) {
             return $retval;

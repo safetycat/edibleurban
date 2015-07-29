@@ -22,24 +22,17 @@
 
 
     window.onload = function() {
-        // first we initialise the map and set its view to our chosen geographical coordinates and zoom level
-        var map = L.map('map').setView([52.57, -0.25], 15);
-        // notice that setView returns the ma object, most leaflet methods act like this for chaining
+        // initialise the map
+        // set its view to our chosen geographical coordinates and zoom level
+        var map = L.map('map',{
+            scrollWheelZoom : false
+        }).setView([52.57, -0.25], 15);
 
-        // add a tile layer to the map. in this case the mapbox streets tile layer
-        // we set the URL template
-        // the attribution text
-        // the maximum zoom level
-
-        // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        //     attribution : '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-        //     maxZoom     : 18,
-        //     id          : 'some shit',
-        //     accessToken : 'blah'
-        // }).addTo(map);
-
-
-        L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.mnohmk0a/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg').addTo(map);
+        // add a tile layer to the map
+        // set the URL template
+        L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.mnohmk0a/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg',{
+            id          : 'hello'
+        }).addTo(map);
 
 
 
@@ -76,78 +69,49 @@
 
         map.addControl(drawControl);
 
-
-
-
-        // var marker = L.marker([51.5, -0.09]).addTo(map);
-
-        // var circle = L.circle([51.508, -0.11], 500, {
-        //     color       : 'red',
-        //     fillColor   : '#f03',
-        //     fillOpacity : 0.5
-        // }).addTo(map);
-
-        // var polygon = L.polygon([
-        //     [51.509,-0.08],
-        //     [51.503,-0.06],
-        //     [51.51,-0.047]
-        // ]).addTo(map);
-
-        // marker.bindPopup('A pretty CSS3 popup.<br> Easily customizable.').openPopup();
-        // circle.bindPopup('I am a circle');
-        // polygon.bindPopup('I am a polygon');
-
-        // var popup = L.popup() // stand alone pop up
-        //         .setLatLng([51.5,-0.15])
-        //         .setContent('I am a stand alone pop up')
-        //         .openOn(map);
-
-        function onMapClick(e) {
-            popup.setLatLng(e.latlng)
-                .setContent('you clicked the map at '+ e.latlng)
-                .openOn(map);
-        }
-
         function onDrawCreated(e) {
+            
+            // set up to communicate from leaflet to angular
+            var scope = angular.element(document.getElementById('postlist')).scope();
+
             var type = e.layerType,
                 layer = e.layer;
 
-            if (type === 'marker') {
-                // Do marker specific actions
-            }
             // Do whatever else you need to. (save to db, add to map etc)
             drawnItems.addLayer(layer);
 
-            // communicate from leaflet to angular
-            var scope = angular.element(document.getElementById('postlist')).scope();
+            var points = layer._latlngs;
+            var coordinates = [];
 
-            console.log( angular.element(document.getElementById('postlist')).scope() );
+            points.forEach(function(element){
+                var pair = [element.lng, element.lat];
+                coordinates.push(pair);
+            });
+
+            // weird but the start and end point must match exactly
+            coordinates.push(coordinates[0]);
+            coordinates = '['+JSON.stringify(coordinates)+']';
+
+            // console.log(coordinates);
 
             scope.$apply(function(){
-                var data = {
-                        title         :"Yes!",
-                        content       :"Content",
-                        geo_json      :JSON.stringify({
-                                         'type': 'Feature',
-                                         'geometry': {
-                                            'type': 'Point',
-                                            'coordinates': [125.6, 10.1]
-                                         },
-                                         'properties': {
-                                         'name': 'Rubbish' 
-                                         }
-                                        })
-                            };
-                scope.mapdata.push(data)
+                var data =
+                {
+                    title       :"Yes!",
+                    content_raw :"Content",
+                    plot        :JSON.stringify({
+                                    'type'      : 'Feature',
+                                    'geometry'  : {'type': 'Polygon', 'coordinates': coordinates },
+                                    'properties': {'name': 'Rubbish'}
+                                })
+                };
+                scope.save(data)
             })
 
-            // alert(scope.returnHello());
-
-            alert('to do: save this to database');
+            // alert('to do: save this to database');
 
         }
 
-        // map.on('click', onMapClick);
         map.on('draw:created', onDrawCreated);
 
 
