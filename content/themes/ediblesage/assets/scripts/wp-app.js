@@ -56,7 +56,11 @@ wpApp.controller('PostListController', ['$scope', '$http', 'Plots', function($sc
         // unpack stringified json object
         data.geo_json = JSON.parse(data.geo_json);
         data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
-        L.geoJson(data.geo_json).addTo(map);
+        L.geoJson(data.geo_json,{onEachFeature:function(feature, layer){
+        if (feature.properties && feature.properties.name) {
+          layer.bindPopup(feature.properties.name);
+        }
+      }}).addTo(map);
         // $scope.mapdata.push(data);
       } );
   };
@@ -71,7 +75,12 @@ wpApp.controller('PostListController', ['$scope', '$http', 'Plots', function($sc
       data.geo_json = JSON.parse(data.geo_json);
       data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
       $scope.mapdata = data;
-      L.geoJson(data.geo_json).addTo(map);
+      console.log(data.geo_json);
+      L.geoJson(data.geo_json,{onEachFeature:function(feature, layer){
+        if (feature.properties && feature.properties.name) {
+          layer.bindPopup(feature.properties.name);
+        }
+      }}).addTo(map);
     });
 
     // data = data[0];
