@@ -56,14 +56,32 @@ wpApp.controller('PostListController', ['$scope', '$http', 'Plots', function($sc
         // unpack stringified json object
         data.geo_json = JSON.parse(data.geo_json);
         data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
-        $scope.mapdata.push(data);
+        L.geoJson(data.geo_json).addTo(map);
+        // $scope.mapdata.push(data);
       } );
   };
 
   $http.get(
     $scope.api + '/posts?type=plots'
   ).success(function(data, status, headers, config){
-    $scope.mapdata = data;
+
+    createMap();
+
+    data.forEach(function(data){
+      data.geo_json = JSON.parse(data.geo_json);
+      data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
+      $scope.mapdata = data;
+      L.geoJson(data.geo_json).addTo(map);
+    });
+
+    // data = data[0];
+    // data.geo_json = JSON.parse(data.geo_json);
+    // data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
+
+    // console.log(data);
+    // createMap();
+
+
   });
 
 

@@ -19,12 +19,11 @@
 </div>
 
 <script type="text/javascript">
-
-
-    window.onload = function() {
+var map;
+    function createMap() {
         // initialise the map
         // set its view to our chosen geographical coordinates and zoom level
-        var map = L.map('map',{
+        map = L.map('map',{
             scrollWheelZoom : false
         }).setView([52.57, -0.25], 15);
 
@@ -46,6 +45,7 @@
                 polyline : false,
                 rectangle: false,
                 circle   : false,
+                marker   : false,
                 polygon  : {
                     allowIntersection : false, // Restricts shapes to simple polygons
                     drawError         : {
@@ -71,6 +71,8 @@
 
         function onDrawCreated(e) {
             
+            var title = prompt('please give your plot a title','plot name');
+
             // set up to communicate from leaflet to angular
             var scope = angular.element(document.getElementById('postlist')).scope();
 
@@ -97,12 +99,12 @@
             scope.$apply(function(){
                 var data =
                 {
-                    title       :"Yes!",
-                    content_raw :"Content",
+                    title       :title,
+                    content_raw :"",
                     plot        :JSON.stringify({
                                     'type'      : 'Feature',
                                     'geometry'  : {'type': 'Polygon', 'coordinates': coordinates },
-                                    'properties': {'name': 'Rubbish'}
+                                    'properties': {'name': title}
                                 })
                 };
                 scope.save(data)
