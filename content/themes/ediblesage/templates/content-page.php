@@ -22,7 +22,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" id="modal-save">Save changes</button>
                 </div>
             </div>
@@ -56,7 +56,7 @@ var map;
 
         // add a tile layer to the map
         // set the URL template
-        L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.mnohmk0a/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg',{
+        L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.18d897de/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg',{
             id          : 'hello'
         }).addTo(map);
 
