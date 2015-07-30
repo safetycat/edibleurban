@@ -2,6 +2,33 @@
 
     <div id="map"></div>
 
+    <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                <h4 class="modal-title" id="myModalLabel">Enter Plot Details</h4>
+                </div>
+                <div class="modal-body">
+                     <form>
+                      <div class="form-group">
+                        <label for="recipient-name" class="control-label">Plot Name:</label>
+                        <input type="text" class="form-control" id="plot-title">
+                      </div>
+                      <div class="form-group">
+                        <label for="message-text" class="control-label">Plot Details:</label>
+                        <textarea class="form-control" style="height:100px" id="plot-body"></textarea>
+                      </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="modal-save">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="postlist" ng-controller="PostListController">
 
         <ul ng-repeat="post in mapdata">
@@ -70,8 +97,34 @@ var map;
         map.addControl(drawControl);
 
         function onDrawCreated(e) {
-            
-            var title = prompt('please give your plot a title','plot name');
+            var title = getInfo(e);
+        }
+
+        function getInfo(e) {
+
+            $('#modal-save').click(function(){
+                var modal = $('#basicModal')
+                var title = modal.find('#plot-title').val();
+                if(title === '') {
+                    alert('you have to put a title');
+                    return;
+                }
+              var title = modal.find('#plot-title').val();
+              var body  = modal.find('#plot-body').val();
+              addandsave(e,{title:title,body:body});
+              $('#basicModal').modal('hide');
+            });
+
+            $('#basicModal').modal('show');
+
+        }
+
+        function addandsave(e, postdata) {
+
+            var title = postdata.title;
+            var content = postdata.body;
+
+
 
             // set up to communicate from leaflet to angular
             var scope = angular.element(document.getElementById('postlist')).scope();
@@ -100,7 +153,7 @@ var map;
                 var data =
                 {
                     title       :title,
-                    content_raw :"",
+                    content_raw :content,
                     plot        :JSON.stringify({
                                     'type'      : 'Feature',
                                     'geometry'  : {'type': 'Polygon', 'coordinates': coordinates },
