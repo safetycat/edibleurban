@@ -128,7 +128,7 @@ var jsTasks = function(filename) {
       return gulpif(enabled.maps, sourcemaps.init());
     })
     .pipe(concat, filename)
-    // .pipe(uglify)
+    .pipe(uglify)
     .pipe(function() {
       return gulpif(enabled.rev, rev());
     })

@@ -3,12 +3,13 @@
  * allow for directive/controller to communicate with another
  * directive/controller on the same level (i.e. when one is not on a parent element of the other)
  * it's just a singleton service that sets to a message passing system
+ * it's way too specific to be useful elsewhere but works at the moment for ediblesage
  * to-do: generalise to a publish/subscribe pattern.
  */
 
-// scripts/app/src/shared/models/MapModel.js
+// scripts/app/src/shared//EventBus.js
 angular.module('App.Common')
-    .service('EventBus', function ($rootScope, $http) {
+    .service('EventBus', function () {
 
             var bus = this; // stash pointer to context
 
@@ -33,4 +34,5 @@ angular.module('App.Common')
             bus.addNewToMap = function(plot) {
                 bus.map.addNewToMap(plot);
             };
+
         });
