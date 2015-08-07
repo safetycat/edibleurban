@@ -4,7 +4,15 @@
     "main.js": {
       "files": [
         "scripts/main.js",
-        "scripts/wp-app.js"
+        "scripts/app/src/app.js",
+        "scripts/app/src/shared/Shared.js",
+        "scripts/app/src/shared/models/MapModel.js",
+        "scripts/app/src/shared/models/EventBus.js",
+        "scripts/app/src/map/Map.js",
+        "scripts/app/src/map/controllers/ModalController.js",
+        "scripts/app/src/map/directives/ModalDirective.js",
+        "scripts/app/src/map/controllers/MapController.js",
+        "scripts/app/src/map/directives/MapDirective.js"
       ],
       "main": true
     },

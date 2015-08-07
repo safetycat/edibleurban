@@ -11,7 +11,6 @@
     api_nonce    : "<?php echo wp_create_nonce('wp_json') ?>",
     template_url : "<?php echo get_bloginfo('template_directory') ?>"
   };
-  console.log(CONFIG.api_url);
   </script>
   <?php wp_head(); ?>
 </head>
