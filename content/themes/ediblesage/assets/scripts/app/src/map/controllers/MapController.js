@@ -33,10 +33,10 @@ angular.module('App.Map')
 
       drawnItems  = createDrawnItemsLayer(map);     // create a layer to put the drawn items on
       map.addLayer(drawnItems);                     // add the new later to the map
-
-      drawControls = createDrawControl(drawnItems); // initialise the draw controls
-      map.addControl(drawControls);                 // add the control to the map
-
+      if(CONFIG.logged_in){
+        drawControls = createDrawControl(drawnItems); // initialise the draw controls
+        map.addControl(drawControls);                 // add the control to the map
+      }
       // add event handlers
       map.on('draw:created', self.onDrawCreated);
 
