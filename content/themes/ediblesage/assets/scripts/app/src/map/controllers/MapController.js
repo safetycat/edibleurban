@@ -54,20 +54,6 @@ angular.module('App.Map')
       self.modal = modal;
     };
 
-    self.addNewToMap = function(plot) {
-
-        plot = MapModel.unpackReturnedPlot(plot);
-
-        L.geoJson( plot.geo_json,{onEachFeature:function(feature, layer)
-          {
-            if (feature.properties && feature.properties.name)
-            {
-              layer.bindPopup(feature.properties.name);
-            }
-          }
-        } ).addTo(self.map);
-    };
-
     // ----------------------------- event handlers ----------------------------- //
     self.onDrawCreated = function(e) {
         self.modal.open(); // get the text data by opening a modal with form in
