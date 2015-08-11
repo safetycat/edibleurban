@@ -145,16 +145,37 @@ angular.module('App.Map')
     }
 
     /**
-     * adds the geoJson in plots to the leaflet map
+     * adds the geoJson in all the plots to the leaflet map
      */
     function addPlotsToMap(map) {
       MapModel.getPlots().forEach(function(data) {
         L.geoJson(data.geo_json,{onEachFeature:function(feature, layer){
           if (feature.properties && feature.properties.name) {
-            layer.bindPopup(feature.properties.name);
+            var body = feature.properties.body || "";
+            layer.bindPopup(feature.properties.name + '<hr>' + body);
           }
         }}).addTo(map);
       });
     }
+    /**
+     * adds a single plot that is returned after the post is made
+     * to-do: this needs fixing to roll in with the method above
+     * @param {[type]} plot [description]
+     */
+    self.addPlotToMap = function(plot) {
+
+        plot = MapModel.unpackReturnedPlot(plot);
+
+        L.geoJson( plot.geo_json,{onEachFeature:function(feature, layer)
+          {
+            if (feature.properties && feature.properties.name)
+            {
+
+              var body = feature.properties.body || "";
+              layer.bindPopup(feature.properties.name + '<hr>' + body);
+            }
+          }
+        } ).addTo(self.map);
+    };
 
   }]);

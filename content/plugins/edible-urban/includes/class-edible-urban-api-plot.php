@@ -3,10 +3,12 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
 
     /**
      * Associated post type
-     *
+     * all this is built from the documentation here
+     * http://wp-api.org/guides/extending.html
      * @var string Type slug
      */
     protected $type = 'plots';
+
 
     public function register_routes($routes) {
 
@@ -20,6 +22,11 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
 
     }
 
+    /**
+     * this method is called when the /plots url is hit using a POST method as defined in the register routes above
+     * @param  [type]   $data    : the data in the post
+     * @return [string] $new_data: geojson data served in response to the post - just the same posted data served back
+     */
     function create_plot( $data ) {
 
         if ( ! empty( $type ) && $type !== $this->type ) {
@@ -43,7 +50,7 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
 
 
 
-        // hack
+        // hack :-(
         $keys_to_remove = [  // the stuff listed here is stuff included by default that we don't need on the front-end
             'post_status',
             'post_type',

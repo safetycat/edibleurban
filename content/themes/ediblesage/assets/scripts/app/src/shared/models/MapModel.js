@@ -20,6 +20,8 @@ angular.module('App.Common')
 
             /**
              * parses geojson data and correctly formats for leaflet
+             * takes all the plots and changes them in place does not
+             * create new variable
              * @param  {json} plots : geojson data from server
              * @return {json} plots : geojson data for leaflet
              */
@@ -27,6 +29,7 @@ angular.module('App.Common')
                 plots.forEach(function(data){
                     data.geo_json = JSON.parse(data.geo_json);
                     data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
+                    data.geo_json.properties.body = data.content;
                 });
                 self.plots = plots;
             };
