@@ -26,6 +26,7 @@ angular.module('App.Map')
         'newcastle'    : [54.975, -1.61]
       };
 
+      var startPos = locationLookUp[location] || [52.57, -0.25]; // default to peterborough.
 
       // store a reference to this object with the event bus object
       // to enable map to modal controller messaging
@@ -34,7 +35,7 @@ angular.module('App.Map')
       // instance the map
       map = L.map(el[0],{
           scrollWheelZoom : false
-      }).setView(locationLookUp[location], 15);               // set view to our chosen geographical coordinates and zoom level
+      }).setView(startPos, 15);               // set view to our chosen geographical coordinates and zoom level
 
       addTileLayer(map);                            // load the custom tileset for the project
 
