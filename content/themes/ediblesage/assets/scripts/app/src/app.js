@@ -2,6 +2,7 @@ var wpApp = angular.module('App',
     [
       'App.Common',
       'App.Map',
+      'ngMessages',
       'ngRoute',
       'ngResource'
     ]).run(['$rootScope', function($rootScope){
