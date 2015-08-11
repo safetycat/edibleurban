@@ -2,7 +2,7 @@
 
 /*  Plugin Name: Edible Urban
     Plugin URI:
-    Description: plug in to enable rest api for custom posts which have a geojson custom field
+    Description: plug in to enable rest api for custom posts which have a geojson custom field, requires wp-rest-api plugin
     Version: 0.0.1
     Author: Safety Cat
     Author URI: http://safetycat.co.uk/
@@ -27,20 +27,25 @@ define( 'WP_APP_PLUGIN_URL',  plugins_url( '', __FILE__ ) );
 define( 'WP_APP_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'EDIBLE_POST_TYPE',  'plots');  // change the name of the POST_TYPE here
 
+
+
+/**
+ * action executed when plugin is activated
+ */
+function edible_install() {
+    // check for wp-api : to-do figure how to do this out later.
+    is_plugin_active('json-rest-api');
+}
 register_activation_hook( __FILE__, 'edible_install' );
 
-function edible_install() {
-    // check for wp-api
-}
+
 
 /**
  * register a post type of plots
  * which has a custom field to contain
  * the geojson string
  */
-add_action( 'init', 'edible_register_my_post_types' );
-
-function edible_register_my_post_types() { // handler
+function edible_register_my_post_types() {
 
   register_post_type( EDIBLE_POST_TYPE, array(
       'labels' => array('name' => 'Plots'),
@@ -50,31 +55,33 @@ function edible_register_my_post_types() { // handler
     )
   );
 }
+add_action( 'init', 'edible_register_my_post_types' );
+
 
 
 /**
- * before serving set up custom  post type API
- * this extends the existing wp-api plug in to
+ * set up custom post type API:
+ * this instantiates a class that
+ * extends the existing wp-api plug-in to
  * accomodate our plot type's custom field(s)
  */
-add_action( 'wp_json_server_before_serve', 'edible_api_init', 11, 1 );
-
 function edible_api_init($server) {
     // we do the require here as we can be sure the WP_API plugin is loaded (which our class extends)
     $api_config_path = dirname(__FILE__).'/includes/class-edible-urban-api-plot.php';
-
     require_once $api_config_path;
+
     $edibleUrban_API_Plot = new EdibleUrban_API_Plot($server);
     $edibleUrban_API_Plot->register_filters();
 }
+add_action( 'wp_json_server_before_serve', 'edible_api_init', 11, 1 );
+
+
 
 /**
  * when serving the JSON
  * add the custom field into the JSON (not done by default!)
  * and remove anything we're not using
  */
-add_filter( 'json_prepare_post', 'edible_post_ammend' , 20, 3 );
-
 function edible_post_ammend( $data, $post, $context ) {
 
     $keys_to_remove = [  // the stuff listed here is stuff included by default that we don't need on the front-end
@@ -103,7 +110,9 @@ function edible_post_ammend( $data, $post, $context ) {
     if( $post['post_type'] === EDIBLE_POST_TYPE ){
         $data['geo_json'] = get_post_meta( $post['ID'] )['map_data'];
         foreach($keys_to_remove as $key)
-        unset($data[$key]);
+            unset($data[$key]);
     }
     return $data;
 }
+add_filter( 'json_prepare_post', 'edible_post_ammend' , 20, 3 );
+
