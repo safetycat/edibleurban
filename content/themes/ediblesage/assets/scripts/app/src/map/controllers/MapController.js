@@ -1,7 +1,7 @@
 // scripts/app/src/map/controllers/MapController.js
 
 angular.module('App.Map')
-  .controller('MapController', ['MapModel', 'EventBus', function(MapModel, EventBus){
+  .controller('MapController', ['$routeParams','MapModel', 'EventBus', function($routeParams, MapModel, EventBus){
 
     // ----------------------------- properties ----------------------------- //
 
@@ -18,7 +18,14 @@ angular.module('App.Map')
       var map,          // leaflet map object
           plots,        // geojson for map objects
           drawnItems,   // a map layer the newly drawn items are added to
-          drawControls; // some tools added to the map to enable drawing
+          drawControls, // some tools added to the map to enable drawing
+          location = $routeParams.place; // store paramater from url
+
+      var locationLookUp = {
+        'peterborough' : [52.57, -0.25],
+        'newcastle'    : [54.975, -1.61]
+      };
+
 
       // store a reference to this object with the event bus object
       // to enable map to modal controller messaging
@@ -27,7 +34,7 @@ angular.module('App.Map')
       // instance the map
       map = L.map(el[0],{
           scrollWheelZoom : false
-      }).setView([52.57, -0.25], 15);               // set view to our chosen geographical coordinates and zoom level
+      }).setView(locationLookUp[location], 15);               // set view to our chosen geographical coordinates and zoom level
 
       addTileLayer(map);                            // load the custom tileset for the project
 
