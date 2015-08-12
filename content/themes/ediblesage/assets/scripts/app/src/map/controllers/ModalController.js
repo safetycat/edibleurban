@@ -28,19 +28,36 @@ angular.module('App.Map')
       $(self.elem).modal('show');
     };
 
+    /** ------------------- form validation stuff ---------------------- */
+
+
+    /**
+     * check if form should be showing validation error
+     * @param  {string} :field name of the form field
+     * @return {bool}   : show object of now.
+     */
+    self.showMessages = function(field) {
+      return self.detailsForm[field].$touched && self.detailsForm[field].$invalid;
+    };
+
+
+
+
+    /**
+     * close the modal and submit the data in mapmodel
+     * @return {[type]} [description]
+     */
     self.close = function() {
 
-      if(!self.newPlot.title) {
-        alert('you have to put a title');
-        return;
-      }
-
-      MapModel.storeDetails(self.newPlot.title, self.newPlot.body);
+      MapModel.storeDetails(self.newPlot.title, self.newPlot.body, self.newPlot.areaType);
 
       MapModel.create().then(function(xhr)
         {
           $(self.elem).modal('hide');
-          MapModel.addNew(xhr.data);      // when post is successfull add to model
+          self.detailsForm.$setPristine();
+          self.detailsForm.$setUntouched();
+          self.newPlot = {};
+
           EventBus.addNewToMap(xhr.data); // and inform maps
         }
       );

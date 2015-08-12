@@ -1,12 +1,29 @@
 // scripts/app/src/map/controllers/MapController.js
 
 angular.module('App.Map')
-  .controller('MapController', ['MapModel', 'EventBus', function(MapModel, EventBus){
+  .controller('MapController', ['$routeParams','MapModel', 'EventBus', function($routeParams, MapModel, EventBus){
 
     // ----------------------------- properties ----------------------------- //
 
     var self  = this; // usual JS pointer to controller context
     self.map = {}; // we will store a reference to the leaflet object here
+
+    // to-do : move this stuff into database somehow
+    var locationLookUp = {
+      'peterborough' : [52.57  ,  -0.25],
+      'newcastle'    : [54.975 ,  -1.61],
+      'dallas'       : [32.775 , -96.79]
+    };
+
+    // to-do : move this stuff into database somehow
+    var colourLookUp = {
+      'Aquaponics'    : '#880000',
+      'Closed Roads'  : '#008800',
+      'Indoor Farming': '#000088',
+      'Public Space'  : '#888800',
+      'Roof Tops'     : '#008888'
+    };
+
 
     // ----------------------------- public methods ----------------------------- //
 
@@ -18,7 +35,10 @@ angular.module('App.Map')
       var map,          // leaflet map object
           plots,        // geojson for map objects
           drawnItems,   // a map layer the newly drawn items are added to
-          drawControls; // some tools added to the map to enable drawing
+          drawControls, // some tools added to the map to enable drawing
+          location = $routeParams.place; // store paramater from url
+
+      var startPos = locationLookUp[location] || [52.57, -0.25]; // default to peterborough.
 
       // store a reference to this object with the event bus object
       // to enable map to modal controller messaging
@@ -27,21 +47,21 @@ angular.module('App.Map')
       // instance the map
       map = L.map(el[0],{
           scrollWheelZoom : false
-      }).setView([52.57, -0.25], 15);               // set view to our chosen geographical coordinates and zoom level
+      }).setView(startPos, 15);               // set view to our chosen geographical coordinates and zoom level
 
       addTileLayer(map);                            // load the custom tileset for the project
 
       drawnItems  = createDrawnItemsLayer(map);     // create a layer to put the drawn items on
       map.addLayer(drawnItems);                     // add the new later to the map
-
-      drawControls = createDrawControl(drawnItems); // initialise the draw controls
-      map.addControl(drawControls);                 // add the control to the map
-
+      if(CONFIG.logged_in){
+        drawControls = createDrawControl(drawnItems); // initialise the draw controls
+        map.addControl(drawControls);                 // add the control to the map
+      }
       // add event handlers
       map.on('draw:created', self.onDrawCreated);
 
       // get plot data and put onto map
-      getPlots(map);
+      nowGetPlots(map);
       self.map = map; // thought I wouldn't have to do this but I was wrong.
     };
 
@@ -52,6 +72,19 @@ angular.module('App.Map')
      */
     self.setModalRefence = function(modal) {
       self.modal = modal;
+    };
+
+    /**
+     * when a new plot is posted it is stored by the server
+     * and put in the server. this gives it an id. the
+     * new plot object complete with id is returned from the
+     * server and then added to the map using this method
+     * ultimately called from the modal (save button) via the event bus
+     */
+    self.addNewPostReturnedPlot = function(data) {
+      var plot = MapModel.unpackReturnedPlot(data);
+      MapModel.addNew(plot);
+      addPlotToMap(plot);
     };
 
     // ----------------------------- event handlers ----------------------------- //
@@ -121,47 +154,44 @@ angular.module('App.Map')
 
 
     /**
-     * calls httpget and passes results through to prepare data
+     * calls httpget and passes results through to unpackReturnedPlot
+     * the call to MapModel.fetchPlots is asnch so effectively
+     * the controller init thread ends here
      */
-    function getPlots(map) {
+    function nowGetPlots(map) {
         MapModel.fetchPlots().then(function(xhr) {
-            MapModel.prepareData(xhr.data);
-            addPlotsToMap(map);
+
+              // we do this when the plots arrive from the server
+              var plots = xhr.data;
+              plots.forEach(function(data){
+                  var plot = MapModel.unpackReturnedPlot(data);
+                  MapModel.addNew(plot);
+                  addPlotToMap(plot);
+              });
+
         });
+        // now we're just waiting for the plots
+        // when they arrive we'll do the function
+        // in the 'then' part which adds the plots to
+        // the map
     }
 
     /**
-     * adds the geoJson in all the plots to the leaflet map
+     * adds a single plot to the map and binds the feature.properties to the popup content
+     * @param {geojson object} plot
      */
-    function addPlotsToMap(map) {
-      MapModel.getPlots().forEach(function(data) {
-        L.geoJson(data.geo_json,{onEachFeature:function(feature, layer){
+    function addPlotToMap(plot) {
+      L.geoJson( plot.geo_json, {
+        style         : function() {
+          return {color: colourLookUp[plot.area_type]};
+        },
+        onEachFeature : function(feature, layer) {
           if (feature.properties && feature.properties.name) {
-            var body = feature.properties.body || "";
-            layer.bindPopup(feature.properties.name + '<hr>' + body);
-          }
-        }}).addTo(map);
-      });
-    }
-    /**
-     * adds a single plot that is returned after the post is made
-     * to-do: this needs fixing to roll in with the method above
-     * @param {[type]} plot [description]
-     */
-    self.addPlotToMap = function(plot) {
-
-        plot = MapModel.unpackReturnedPlot(plot);
-
-        L.geoJson( plot.geo_json,{onEachFeature:function(feature, layer)
-          {
-            if (feature.properties && feature.properties.name)
-            {
-
               var body = feature.properties.body || "";
-              layer.bindPopup(feature.properties.name + '<hr>' + body);
-            }
+              layer.bindPopup(feature.properties.name + '<hr/>' + body + '<hr/>' + plot.area_type);
           }
-        } ).addTo(self.map);
-    };
+        }
+      } ).addTo(self.map);
+    }
 
   }]);
