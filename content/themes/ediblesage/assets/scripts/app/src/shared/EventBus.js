@@ -32,7 +32,7 @@ angular.module('App.Common')
 
             // called when modal is closed and succefully posted new data
             bus.addNewToMap = function(plot) {
-                bus.map.addPlotToMap(plot);
+                bus.map.addNewPostReturnedPlot(plot);
             };
 
         });

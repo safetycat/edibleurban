@@ -44,11 +44,10 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
         // add geojson meta data
         add_post_meta($retval, 'map_data', $data['plot'], true);
 
+        // add the area type
+        wp_set_object_terms( $retval, $data['areatype'], 'area-type' );
+
         $data = (array)get_post( $retval, 'view');
-
-        // apply_filters( 'json_prepare_post', $data );
-
-
 
         // hack :-(
         $keys_to_remove = [  // the stuff listed here is stuff included by default that we don't need on the front-end
@@ -91,13 +90,14 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
             foreach($keys_to_remove as $key)
             unset($data[$key]);
         }
-
+        // we should unpack the geojson as it's not properly stored. my bad but hopefully easy to fix..
         $new_data = array(
             'id'        => $data['ID'],
             'title'     => $data['post_title'],
             'content'   => $data['post_content'],
             'excerpt'   => $data['post_excerpt'],
-            'geo_json'  => $data['geo_json']
+            'geo_json'  => $data['geo_json'],
+            'area_type' => get_the_terms( $data['ID'], 'area-type' )
         );
 
         return $new_data;
