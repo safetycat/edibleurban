@@ -58,7 +58,6 @@ angular.module('App.Map')
           self.detailsForm.$setUntouched();
           self.newPlot = {};
 
-          MapModel.addNew(xhr.data);      // when post is successfull add returned data to model
           EventBus.addNewToMap(xhr.data); // and inform maps
         }
       );

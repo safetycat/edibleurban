@@ -60,6 +60,46 @@ add_action( 'init', 'edible_register_my_post_types' );
 
 
 /**
+ * register Custom Taxonomy
+ */
+function createAreaTypes() {
+
+    $labels = array(
+        'name'                       => _x( 'Area Type', 'Taxonomy General Name', 'text_domain' ),
+        'singular_name'              => _x( 'Area Type', 'Taxonomy Singular Name', 'text_domain' ),
+        'menu_name'                  => __( 'Area Types', 'text_domain' ),
+        'all_items'                  => __( 'Area Types', 'text_domain' ),
+        'parent_item'                => __( 'Parent Type', 'text_domain' ),
+        'parent_item_colon'          => __( 'Parent Type:', 'text_domain' ),
+        'new_item_name'              => __( 'New Area Type', 'text_domain' ),
+        'add_new_item'               => __( 'Add new Area Type', 'text_domain' ),
+        'edit_item'                  => __( 'Edit Area Type', 'text_domain' ),
+        'update_item'                => __( 'Update Area Type', 'text_domain' ),
+        'view_item'                  => __( 'View Area Type', 'text_domain' ),
+        'separate_items_with_commas' => __( 'Separate Area Types with commas', 'text_domain' ),
+        'add_or_remove_items'        => __( 'Add or remove Area Type', 'text_domain' ),
+        'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
+        'popular_items'              => __( 'Popular Area Types', 'text_domain' ),
+        'search_items'               => __( 'Search Area Types', 'text_domain' ),
+        'not_found'                  => __( 'Area Type Not Found', 'text_domain' ),
+    );
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => true,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => true,
+        'show_tagcloud'              => true,
+    );
+    register_taxonomy( 'area-type', array( EDIBLE_POST_TYPE ), $args );
+
+}
+add_action( 'init', 'createAreaTypes' );
+
+
+
+/**
  * set up custom post type API:
  * this instantiates a class that
  * extends the existing wp-api plug-in to
@@ -107,8 +147,13 @@ function edible_post_ammend( $data, $post, $context ) {
         'author',
     ];
 
+    // we have this problem which has kind of spread in a few places front and back end where its difficult
+    // to manipulate the meta field stuff just since it's all a string so we'd need to convert into into some 
+    // kind of native PHP object, insert into it and then convert it back to a string to serve it. which we can
+    // do but haven't yet.
     if( $post['post_type'] === EDIBLE_POST_TYPE ){
-        $data['geo_json'] = get_post_meta( $post['ID'] )['map_data'];
+        $data['area_type'] = get_the_terms( $post['ID'], 'area-type' )[0]->name;
+        $data['geo_json']  = get_post_meta( $post['ID'] )['map_data'];
         foreach($keys_to_remove as $key)
             unset($data[$key]);
     }

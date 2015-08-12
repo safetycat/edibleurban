@@ -26,12 +26,18 @@ angular.module('App.Common')
              * @return {json} plots : geojson data for leaflet
              */
             self.prepareData = function(plots) {
-                plots.forEach(function(data){
-                    data.geo_json = JSON.parse(data.geo_json);
-                    data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
-                    data.geo_json.properties.body = data.content;
-                });
-                self.plots = plots;
+
+            };
+
+            /**
+             * which prepares the data (as the meta field in wordpress stores it as a string)
+             * (to-do: we probably should do this string->json conversion on the server)
+             */
+            self.unpackReturnedPlot = function(data) {
+                data.geo_json = JSON.parse(data.geo_json);
+                data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
+                data.geo_json.properties.body = data.content;
+                return data;
             };
 
             /**
@@ -40,6 +46,10 @@ angular.module('App.Common')
              */
             self.getPlots = function() {
                 return self.plots;
+            };
+
+            self.addNew = function(plot) {
+                self.plots.push(plot);
             };
 
             /**
@@ -65,17 +75,6 @@ angular.module('App.Common')
                                 'geometry'  : {'type': 'Polygon', 'coordinates': data },
                                 'properties': {}  // we fill this bit in later!
                 };
-            };
-
-            self.addNew = function(plot) {
-                self.plots.push(plot);
-            };
-
-            // unpack stringified json object -- this won't be necessary when we fix the post format
-            self.unpackReturnedPlot = function(data) {
-                data.geo_json = JSON.parse(data.geo_json);
-                data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
-                return data;
             };
 
             // ----------------------------- private methods ----------------------------- //
