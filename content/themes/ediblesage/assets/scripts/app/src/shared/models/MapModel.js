@@ -56,11 +56,13 @@ angular.module('App.Common')
              * store the text data for the geojson to be combined
              * with geojson for posting to map
              */
-            self.storeDetails = function(title, details) {
+            self.storeDetails = function(title, details, type) {
                 self.newPlot.title = title;
                 self.newPlot.content_raw = details;
+                self.newPlot.areatype = type;
                 self.newPlot.plot.properties.name = title;
                 self.newPlot.plot.properties.body = details;
+                self.newPlot.plot.properties.areatype = type;
             };
 
             self.storePoints = function(e) {
