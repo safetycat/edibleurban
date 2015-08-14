@@ -51,7 +51,7 @@ function edible_register_my_post_types() {
       'labels' => array('name' => 'Plots'),
       'taxonomies'  => array( 'category' ),
       'public' => true,
-      'supports' => array('title','editor','custom-fields')
+      'supports' => array('title','editor','custom-fields','thumbnail')
     )
   );
 }
@@ -112,10 +112,13 @@ function edible_api_init($server) {
 
     $edibleUrban_API_Plot = new EdibleUrban_API_Plot($server);
     $edibleUrban_API_Plot->register_filters();
+
+    // we don't need all that extra data in the post
+    global $wp_json_posts, $wp_json_pages, $wp_json_media, $wp_json_taxonomies;
+    remove_filter( 'json_prepare_post',    array( $wp_json_users, 'add_post_author_data' ), 10);
+    remove_filter( 'json_prepare_post',    array( $wp_json_media, 'add_thumbnail_data' ), 10);
 }
 add_action( 'wp_json_server_before_serve', 'edible_api_init', 11, 1 );
-
-
 
 /**
  * when serving the JSON
@@ -152,10 +155,18 @@ function edible_post_ammend( $data, $post, $context ) {
     // kind of native PHP object, insert into it and then convert it back to a string to serve it. which we can
     // do but haven't yet.
     if( $post['post_type'] === EDIBLE_POST_TYPE ){
-        $data['area_type'] = get_the_terms( $post['ID'], 'area-type' )[0]->name;
-        $data['geo_json']  = get_post_meta( $post['ID'] )['map_data'];
+
         foreach($keys_to_remove as $key)
             unset($data[$key]);
+
+        $data['area_type'] = get_the_terms( $post['ID'], 'area-type' )[0]->name;
+        $data['geo_json']  = get_post_meta( $post['ID'] )['map_data'];
+
+        if( has_post_thumbnail($post['ID']) ) {
+            $thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post['ID']) );
+            $data['image'] = $thumb[0]; // we only allow one image
+        }
+
     }
     return $data;
 }
