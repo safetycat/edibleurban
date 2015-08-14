@@ -85,7 +85,9 @@ angular.module('App.Common')
                 var retval = '';
 
                 retval += name + '<hr/>';
-                retval += "<img src='"+image+"'/>";
+                if(image){
+                    retval += "<img src='"+image+"'/>";
+                }
                 retval += body + '<hr/>';
                 retval += area_type;
 
