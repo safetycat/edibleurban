@@ -36,7 +36,8 @@ angular.module('App.Common')
             self.unpackReturnedPlot = function(data) {
                 data.geo_json = JSON.parse(data.geo_json);
                 data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
-                data.geo_json.properties.body = data.content;
+                data.geo_json.properties.body  = data.content;
+                data.geo_json.properties.image = data.image;
                 return data;
             };
 
@@ -56,13 +57,14 @@ angular.module('App.Common')
              * store the text data for the geojson to be combined
              * with geojson for posting to map
              */
-            self.storeDetails = function(title, details, type) {
+            self.storeDetails = function(title, details, type, imageId) {
                 self.newPlot.title = title;
                 self.newPlot.content_raw = details;
                 self.newPlot.areatype = type;
                 self.newPlot.plot.properties.name = title;
                 self.newPlot.plot.properties.body = details;
                 self.newPlot.plot.properties.areatype = type;
+                self.newPlot.imageId = imageId;
             };
 
             self.storePoints = function(e) {
@@ -75,6 +77,19 @@ angular.module('App.Common')
                                 'geometry'  : {'type': 'Polygon', 'coordinates': data },
                                 'properties': {}  // we fill this bit in later!
                 };
+            };
+
+            // this shouldn't be here
+            // to-do: move this to a template somewhere easy to edit
+            self.popUpFormat = function(name, body, area_type, image) {
+                var retval = '';
+
+                retval += name + '<hr/>';
+                retval += "<img src='"+image+"'/>";
+                retval += body + '<hr/>';
+                retval += area_type;
+
+                return retval;
             };
 
             // ----------------------------- private methods ----------------------------- //

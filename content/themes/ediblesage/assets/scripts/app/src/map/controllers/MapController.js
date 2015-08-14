@@ -24,7 +24,6 @@ angular.module('App.Map')
       'Roof Tops'     : '#008888'
     };
 
-
     // ----------------------------- public methods ----------------------------- //
 
     /**
@@ -187,8 +186,11 @@ angular.module('App.Map')
         },
         onEachFeature : function(feature, layer) {
           if (feature.properties && feature.properties.name) {
-              var body = feature.properties.body || "";
-              layer.bindPopup(feature.properties.name + '<hr/>' + body + '<hr/>' + plot.area_type);
+              var body  = feature.properties.body  || "";
+              var image = feature.properties.image || "";
+              var popUpContent = MapModel.popUpFormat(feature.properties.name, body, plot.area_type, image);
+
+              layer.bindPopup(popUpContent);
           }
         }
       } ).addTo(self.map);

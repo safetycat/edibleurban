@@ -47,6 +47,10 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
         // add the area type
         wp_set_object_terms( $retval, $data['areatype'], 'area-type' );
 
+        if(isset($data['imageId'])) {
+            set_post_thumbnail( $retval, $data['imageId'] );
+        }
+
         $data = (array)get_post( $retval, 'view');
 
         // hack :-(
@@ -90,6 +94,11 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
             foreach($keys_to_remove as $key)
             unset($data[$key]);
         }
+
+        if( has_post_thumbnail($data['ID']) ) {
+            $thumb = wp_get_attachment_image_src( get_post_thumbnail_id($data['ID']) );
+        }
+
         // we should unpack the geojson as it's not properly stored. my bad but hopefully easy to fix..
         $new_data = array(
             'id'        => $data['ID'],
@@ -97,7 +106,8 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
             'content'   => $data['post_content'],
             'excerpt'   => $data['post_excerpt'],
             'geo_json'  => $data['geo_json'],
-            'area_type' => get_the_terms( $data['ID'], 'area-type' )
+            'area_type' => get_the_terms( $data['ID'], 'area-type' )[0]->name,
+            'image'     => $thumb[0]
         );
 
         return $new_data;
