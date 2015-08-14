@@ -85,7 +85,7 @@ angular.module('App.Common')
                 var retval = '';
 
                 retval += name + '<hr/>';
-                if(image){
+                if(image != ''){
                     retval += "<img src='"+image+"'/>";
                 }
                 retval += body + '<hr/>';
