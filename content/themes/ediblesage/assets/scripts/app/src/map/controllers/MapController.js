@@ -17,11 +17,13 @@ angular.module('App.Map')
 
     // to-do : move this stuff into database somehow
     var colourLookUp = {
-      'Aquaponics'    : '#880000',
-      'Closed Roads'  : '#008800',
-      'Indoor Farming': '#000088',
-      'Public Space'  : '#888800',
-      'Roof Tops'     : '#008888'
+      'Vacant land'    : '#880000',
+      'Grass'          : '#008800',
+      'Tarmac'         : '#000088',
+      'Car park'       : '#888800',
+      'Rooftop'        : '#008888',
+      'Road'           : '#880088',
+      'Wall'           : '#888888'
     };
 
     // ----------------------------- public methods ----------------------------- //
@@ -188,7 +190,7 @@ angular.module('App.Map')
           if (feature.properties && feature.properties.name) {
               var body  = feature.properties.body  || "";
               var image = feature.properties.image || "";
-              var popUpContent = MapModel.popUpFormat(feature.properties.name, body, plot.area_type, image);
+              var popUpContent = MapModel.popUpFormat( feature.properties.name, body, plot.area_type, image, feature.properties.suggestedUses );
 
               layer.bindPopup(popUpContent);
           }

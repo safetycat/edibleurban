@@ -62,26 +62,26 @@ add_action( 'init', 'edible_register_my_post_types' );
 /**
  * register Custom Taxonomy
  */
-function createAreaTypes() {
+function createTaxonomies() {
 
     $labels = array(
-        'name'                       => _x( 'Area Type', 'Taxonomy General Name', 'text_domain' ),
-        'singular_name'              => _x( 'Area Type', 'Taxonomy Singular Name', 'text_domain' ),
-        'menu_name'                  => __( 'Area Types', 'text_domain' ),
-        'all_items'                  => __( 'Area Types', 'text_domain' ),
+        'name'                       => _x( 'Land Type', 'Taxonomy General Name', 'text_domain' ),
+        'singular_name'              => _x( 'Land Type', 'Taxonomy Singular Name', 'text_domain' ),
+        'menu_name'                  => __( 'Land Types', 'text_domain' ),
+        'all_items'                  => __( 'Land Types', 'text_domain' ),
         'parent_item'                => __( 'Parent Type', 'text_domain' ),
         'parent_item_colon'          => __( 'Parent Type:', 'text_domain' ),
-        'new_item_name'              => __( 'New Area Type', 'text_domain' ),
-        'add_new_item'               => __( 'Add new Area Type', 'text_domain' ),
-        'edit_item'                  => __( 'Edit Area Type', 'text_domain' ),
-        'update_item'                => __( 'Update Area Type', 'text_domain' ),
-        'view_item'                  => __( 'View Area Type', 'text_domain' ),
-        'separate_items_with_commas' => __( 'Separate Area Types with commas', 'text_domain' ),
-        'add_or_remove_items'        => __( 'Add or remove Area Type', 'text_domain' ),
+        'new_item_name'              => __( 'New Land Type', 'text_domain' ),
+        'add_new_item'               => __( 'Add new Land Type', 'text_domain' ),
+        'edit_item'                  => __( 'Edit Land Type', 'text_domain' ),
+        'update_item'                => __( 'Update Land Type', 'text_domain' ),
+        'view_item'                  => __( 'View Land Type', 'text_domain' ),
+        'separate_items_with_commas' => __( 'Separate Land Types with commas', 'text_domain' ),
+        'add_or_remove_items'        => __( 'Add or remove Land Type', 'text_domain' ),
         'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
-        'popular_items'              => __( 'Popular Area Types', 'text_domain' ),
-        'search_items'               => __( 'Search Area Types', 'text_domain' ),
-        'not_found'                  => __( 'Area Type Not Found', 'text_domain' ),
+        'popular_items'              => __( 'Popular Land Types', 'text_domain' ),
+        'search_items'               => __( 'Search Land Types', 'text_domain' ),
+        'not_found'                  => __( 'Land Type Not Found', 'text_domain' ),
     );
     $args = array(
         'labels'                     => $labels,
@@ -94,8 +94,41 @@ function createAreaTypes() {
     );
     register_taxonomy( 'area-type', array( EDIBLE_POST_TYPE ), $args );
 
+    // ---------------------- //
+
+    $labels = array(
+        'name'                       => _x( 'Suggested Use', 'Taxonomy General Name', 'text_domain' ),
+        'singular_name'              => _x( 'Suggested Use', 'Taxonomy Singular Name', 'text_domain' ),
+        'menu_name'                  => __( 'Suggested Uses', 'text_domain' ),
+        'all_items'                  => __( 'Suggested Uses', 'text_domain' ),
+        'parent_item'                => __( 'Parent Type', 'text_domain' ),
+        'parent_item_colon'          => __( 'Parent Type:', 'text_domain' ),
+        'new_item_name'              => __( 'New Suggested Use', 'text_domain' ),
+        'add_new_item'               => __( 'Add new Suggested Use', 'text_domain' ),
+        'edit_item'                  => __( 'Edit Suggested Use', 'text_domain' ),
+        'update_item'                => __( 'Update Suggested Use', 'text_domain' ),
+        'view_item'                  => __( 'View Suggested Use', 'text_domain' ),
+        'separate_items_with_commas' => __( 'Separate Suggested Uses with commas', 'text_domain' ),
+        'add_or_remove_items'        => __( 'Add or remove Suggested Use', 'text_domain' ),
+        'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
+        'popular_items'              => __( 'Popular Suggested Uses', 'text_domain' ),
+        'search_items'               => __( 'Search Suggested Uses', 'text_domain' ),
+        'not_found'                  => __( 'Suggested Use Not Found', 'text_domain' ),
+    );
+    $args = array(
+        'labels'                     => $labels,
+        'hierarchical'               => true,
+        'public'                     => true,
+        'show_ui'                    => true,
+        'show_admin_column'          => true,
+        'show_in_nav_menus'          => true,
+        'show_tagcloud'              => true,
+    );
+    register_taxonomy( 'suggested-use', array( EDIBLE_POST_TYPE ), $args );
+
+
 }
-add_action( 'init', 'createAreaTypes' );
+add_action( 'init', 'createTaxonomies' );
 
 
 
@@ -156,11 +189,23 @@ function edible_post_ammend( $data, $post, $context ) {
     // do but haven't yet.
     if( $post['post_type'] === EDIBLE_POST_TYPE ){
 
-        foreach($keys_to_remove as $key)
+        foreach($keys_to_remove as $key){
             unset($data[$key]);
+        }
 
-        $data['area_type'] = get_the_terms( $post['ID'], 'area-type' )[0]->name;
-        $data['geo_json']  = get_post_meta( $post['ID'] )['map_data'];
+        // this is slighly complex to gather the terms into an array
+        $suggestedUsesTerms = get_the_terms( $post['ID'], 'suggested-use' );
+        $suggestedUses      = array();
+        if($suggestedUsesTerms) {
+            foreach ($suggestedUsesTerms as $key => $term) {
+                $suggestedUses[] = $term->name;
+            }
+        }
+        $suggestedUses = json_encode($suggestedUses); //n.b. PHP 5.2 and above
+
+        $data['suggested_uses'] = $suggestedUses;
+        $data['area_type']      = get_the_terms( $post['ID'], 'area-type' )[0]->name;
+        $data['geo_json']       = get_post_meta( $post['ID'] )['map_data'];
 
         if( has_post_thumbnail($post['ID']) ) {
             $thumb = wp_get_attachment_image_src( get_post_thumbnail_id($post['ID']) );

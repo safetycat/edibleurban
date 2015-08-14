@@ -64,40 +64,94 @@
                             <div class="col-sm-6">
                               <div class="radio">
                                   <label>
-                                    <input type="radio" name="areaType" value="public space" ng-model="ModalController.newPlot.areaType" />
-                                    Public Space
+                                    <input type="radio" name="areaType" value="carpark" ng-model="ModalController.newPlot.areaType" />
+                                    Car Park
                                   </label>
                               </div>
                               <div class="radio">
                                   <label>
-                                    <input type="radio" name="areaType" value="aquaponics" ng-model="ModalController.newPlot.areaType" />
-                                    Aquaponics
+                                    <input type="radio" name="areaType" value="grass" ng-model="ModalController.newPlot.areaType" />
+                                    Grass
                                   </label>
                               </div>
                               <div class="radio">
                                   <label>
-                                    <input type="radio" name="areaType" value="closed roads" ng-model="ModalController.newPlot.areaType" />
-                                    Closed Roads
+                                    <input type="radio" name="areaType" value="road" ng-model="ModalController.newPlot.areaType" />
+                                    Road
                                   </label>
                               </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="radio">
                                   <label>
-                                    <input type="radio" name="areaType" value="rooftops" ng-model="ModalController.newPlot.areaType" />
-                                    Rooftops
+                                    <input type="radio" name="areaType" value="rooftop" ng-model="ModalController.newPlot.areaType" />
+                                    Rooftop
                                   </label>
                                 </div>
                                 <div class="radio">
                                   <label>
-                                    <input type="radio" name="areaType" value="indoor farming" ng-model="ModalController.newPlot.areaType" />
-                                    Indoor Farming
+                                    <input type="radio" name="areaType" value="tarmac" ng-model="ModalController.newPlot.areaType" />
+                                    Tarmac
+                                  </label>
+                                </div>
+                                <div class="radio">
+                                  <label>
+                                    <input type="radio" name="areaType" value="wall" ng-model="ModalController.newPlot.areaType" />
+                                    Wall
                                   </label>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
+
+                    <div class="form-group clearfix">
+                        <fieldset>
+                            <legend><span style="font-size: 14px;font-weight: 700;">Suggested Uses:</span></legend>
+                            <div class="col-sm-6">
+                              <div class="checkbox">
+                                  <label>
+                                    <input type="checkbox" name="suggestedUse" value="community garden" ng-model="ModalController.newPlot.suggestedUse.community" />
+                                    Community Garden
+                                  </label>
+                              </div>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" name="suggestedUse" value="market garden" ng-model="ModalController.newPlot.suggestedUse.market" />
+                                  Market Garden
+                                </label>
+                              </div>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" name="suggestedUse" value="commercial" ng-model="ModalController.newPlot.suggestedUse.commercial" />
+                                  Commercial
+                                </label>
+                              </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" name="suggestedUse" value="educational" ng-model="ModalController.newPlot.suggestedUse.educational" />
+                                  Educational
+                                </label>
+                              </div>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" name="suggestedUse" value="meanwhile" ng-model="ModalController.newPlot.suggestedUse.meanwhile" />
+                                  Meanwhile
+                                </label>
+                              </div>
+                            </div>
+                        </fieldset>
+                    </div>
+
+
+
+
                 </div>
+
+
+
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
