@@ -1,3 +1,8 @@
+<!-- ok so general rule is don't touch anything with ng- prefix -->
+<!-- whatever else is cool -->
+<!-- sorry about the messy code for doing the columns -->
+<!-- you can probably do this with sass much easier?? -->
+
 <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -58,101 +63,110 @@
                         <input type="text" class="form-control" ng-model="ModalController.dialogue.feedback" readonly>
                     </div>
 
+<!-- radio buttons for land type -->
+<?php
+  $terms = get_terms( "area-type", array( 'hide_empty' => 0 ) );
+
+  // this is maybe more complicated than it needs to be?
+  // it bascially works out when to open/close div tags depending on how many cols you want.
+  $number_of_columns = 3;
+  $number_of_terms   = count($terms);
+  $number_per_column = round($number_of_terms/$number_of_columns)?:1; // the number of categories before starting a new column
+  $counter           = 0; // need counter as can't rely on array keys being in sequence...
+  $bootstrap_cols    = floor(12 / $number_of_columns)?:1;
+?>
+
                     <div class="form-group clearfix">
                         <fieldset>
-                            <legend><span style="font-size: 14px;font-weight: 700;">Area Type:</span></legend>
-                            <div class="col-sm-6">
+                            <legend><span style="font-size: 14px;font-weight: 700;">Land Type:</span></legend>
+
+                            <?php
+                            foreach($terms as $index => $term):
+                              $start_col = ($counter % $number_per_column == 0); // boolean true if need a new col
+                            ?>
+
+                              <?php if($start_col): ?>
+                                <div class="col-sm-<?php echo $bootstrap_cols;?>">
+                              <?php endif; ?>
+
                               <div class="radio">
                                   <label>
-                                    <input type="radio" name="areaType" value="carpark" ng-model="ModalController.newPlot.areaType" />
-                                    Car Park
+                                    <input
+                                      type     = "radio"
+                                      name     = "areaType"
+                                      value    = "<?php echo $term->slug;?>"
+                                      ng-model = "ModalController.newPlot.areaType" />
+                                    <?php echo $term->name;?>
                                   </label>
                               </div>
-                              <div class="radio">
-                                  <label>
-                                    <input type="radio" name="areaType" value="grass" ng-model="ModalController.newPlot.areaType" />
-                                    Grass
-                                  </label>
-                              </div>
-                              <div class="radio">
-                                  <label>
-                                    <input type="radio" name="areaType" value="road" ng-model="ModalController.newPlot.areaType" />
-                                    Road
-                                  </label>
-                              </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="radio">
-                                  <label>
-                                    <input type="radio" name="areaType" value="rooftop" ng-model="ModalController.newPlot.areaType" />
-                                    Rooftop
-                                  </label>
-                                </div>
-                                <div class="radio">
-                                  <label>
-                                    <input type="radio" name="areaType" value="tarmac" ng-model="ModalController.newPlot.areaType" />
-                                    Tarmac
-                                  </label>
-                                </div>
-                                <div class="radio">
-                                  <label>
-                                    <input type="radio" name="areaType" value="wall" ng-model="ModalController.newPlot.areaType" />
-                                    Wall
-                                  </label>
-                                </div>
-                            </div>
+
+                              <?php
+                                $counter++;
+                                $end_col = $number_of_terms == $counter || $counter % $number_per_column == 0 ; // boolean true if need close col
+                                if($end_col){ echo "</div>"; }
+                              ?>
+
+                            <?php
+                            endforeach;
+                            ?>
+
                         </fieldset>
                     </div>
+
+
+<!-- checkboxes for suggested use -->
+<?php
+  $terms = get_terms( "suggested-use", array( 'hide_empty' => 0 ) );
+
+  // this is maybe more complicated than it needs to be?
+  // it bascially works out when to open/close div tags depending on how many cols you want.
+  $number_of_columns = 3;
+  $number_of_terms   = count($terms);
+  $number_per_column = round($number_of_terms/$number_of_columns)?:1; // the number of categories before starting a new column
+  $counter           = 0; // need counter as can't rely on array keys being in sequence...
+  $bootstrap_cols    = floor(12 / $number_of_columns)?:1;
+?>
+
 
                     <div class="form-group clearfix">
                         <fieldset>
                             <legend><span style="font-size: 14px;font-weight: 700;">Suggested Uses:</span></legend>
-                            <div class="col-sm-6">
+
+                            <?php
+                            foreach($terms as $index => $term):
+                              $start_col = ($counter % $number_per_column == 0); // boolean : true if need a new col
+                            ?>
+
+                              <?php if($start_col): ?>
+                                <div class="col-sm-<?php echo $bootstrap_cols;?>">
+                              <?php endif; ?>
+
                               <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="suggestedUse" value="community garden" ng-model="ModalController.newPlot.suggestedUse.community" />
-                                    Community Garden
+                                    <input
+                                      type="checkbox"
+                                      name="suggestedUse"
+                                      value="<?php echo $term->slug;?>"
+                                      ng-model="ModalController.newPlot.suggestedUse.<?php echo $term->slug;?>" />
+                                    <?php echo $term->name;?>
                                   </label>
                               </div>
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox" name="suggestedUse" value="market garden" ng-model="ModalController.newPlot.suggestedUse.market" />
-                                  Market Garden
-                                </label>
-                              </div>
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox" name="suggestedUse" value="commercial" ng-model="ModalController.newPlot.suggestedUse.commercial" />
-                                  Commercial
-                                </label>
-                              </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox" name="suggestedUse" value="educational" ng-model="ModalController.newPlot.suggestedUse.educational" />
-                                  Educational
-                                </label>
-                              </div>
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox" name="suggestedUse" value="meanwhile" ng-model="ModalController.newPlot.suggestedUse.meanwhile" />
-                                  Meanwhile
-                                </label>
-                              </div>
-                            </div>
+                              <?php
+                                $counter++;
+                                $end_col = $number_of_terms == $counter || $counter % $number_per_column == 0 ; // boolean : true if need close col
+                                if($end_col){ echo "</div>"; }
+                              ?>
+
+                            <?php
+                            endforeach;
+                            ?>
                         </fieldset>
                     </div>
 
-
-
-
                 </div>
 
-
-
-
+<!-- model footer with cancel/submit buttons -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <button
