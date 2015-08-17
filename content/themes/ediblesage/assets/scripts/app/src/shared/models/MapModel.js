@@ -81,26 +81,6 @@ angular.module('App.Common')
                 };
             };
 
-            // this shouldn't be here
-            // to-do: move this to a template somewhere easy to edit
-            self.popUpFormat = function(name, body, area_type, image, suggestedUses) {
-                var retval = '';
-
-                retval += name + '<hr/>';
-
-                if(image !== ''){
-                    retval += "<img src='"+image+"'/>";
-                }
-                retval += body + '<hr/>';
-                retval += area_type + '<br/>';
-
-                suggestedUses.forEach(function(use){
-                    retval += " " + use + ' :';
-                });
-
-                return retval.slice(0, - 1);
-            };
-
             // ----------------------------- private methods ----------------------------- //
 
             function fixDataForPosting(layer) {

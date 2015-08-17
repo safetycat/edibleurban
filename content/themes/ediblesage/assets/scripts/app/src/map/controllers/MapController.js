@@ -1,12 +1,14 @@
 // scripts/app/src/map/controllers/MapController.js
 
 angular.module('App.Map')
-  .controller('MapController', ['$routeParams','MapModel', 'EventBus', function($routeParams, MapModel, EventBus){
+  .controller('MapController', ['$routeParams', '$templateCache', '$interpolate', 'MapModel', 'EventBus', function($routeParams, $templateCache, $interpolate, MapModel, EventBus){
 
     // ----------------------------- properties ----------------------------- //
 
     var self  = this; // usual JS pointer to controller context
     self.map = {}; // we will store a reference to the leaflet object here
+
+    var popUpTemplate = $interpolate($templateCache.get('map_popup'));  // we need this to pass a html string to leaflet to define popup content
 
     // to-do : move this stuff into database somehow
     var locationLookUp = {
@@ -190,9 +192,15 @@ angular.module('App.Map')
           if (feature.properties && feature.properties.name) {
               var body  = feature.properties.body  || "";
               var image = feature.properties.image || "";
-              var popUpContent = MapModel.popUpFormat( feature.properties.name, body, plot.area_type, image, feature.properties.suggestedUses );
+              var popUpContent = popUpTemplate( {
+                name          : feature.properties.name,
+                body          : body,
+                area_type     : plot.area_type,
+                image         : image,
+                suggestedUses : feature.properties.suggestedUses.toString()
+              } );
 
-              layer.bindPopup(popUpContent);
+             layer.bindPopup(popUpContent);
           }
         }
       } ).addTo(self.map);
