@@ -2,7 +2,7 @@
 <div>
 {{name}}
 <hr />
-{{image ? "<img src='" : "<!--"}} {{image}} {{image ? "'/>" : "-->"}}
+{{image ? "<img src='" : ""}} {{image}} {{image ? "'/>" : ""}}
 {{body}}
 <hr />
 {{area_type}} <br />
