@@ -71,7 +71,7 @@ angular.module('App.Map')
      */
     self.close = function() {
 
-      MapModel.storeDetails(self.newPlot.title, self.newPlot.body, self.newPlot.areaType, self.newPlot.imageId);
+      MapModel.storeDetails(self.newPlot.title, self.newPlot.body, self.newPlot.areaType, self.newPlot.imageId, self.newPlot.suggestedUse);
 
       MapModel.create().then(function(xhr)
         {

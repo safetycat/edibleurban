@@ -13,7 +13,7 @@ angular.module('App.Map')
             controller       : 'ModalController',
             bindToController : true,
             replace          : true,
-            templateUrl      : '/content/themes/ediblesage/assets/scripts/app/src/map/tmpl/modal.html',
+            templateUrl      : '/new_plot_form/',
             link             : function(scope, element, attrs, ModalController) { ModalController.init( element ); }
         };
     });

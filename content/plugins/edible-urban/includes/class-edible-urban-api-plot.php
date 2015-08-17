@@ -47,6 +47,10 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
         // add the area type
         wp_set_object_terms( $retval, $data['areatype'], 'area-type' );
 
+        // add the suggested use types
+        $suggestedUses = explode( ',' , $data['suggestedUses'] );
+        wp_set_object_terms( $retval, $suggestedUses, 'suggested-use' );
+
         if(isset($data['imageId'])) {
             set_post_thumbnail( $retval, $data['imageId'] );
         }
@@ -99,15 +103,26 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
             $thumb = wp_get_attachment_image_src( get_post_thumbnail_id($data['ID']) );
         }
 
+        // this is slighly complex to gather the terms into an array
+        $suggestedUsesTerms = get_the_terms( $data['ID'], 'suggested-use' );
+        $suggestedUses      = array();
+
+        foreach ($suggestedUsesTerms as $key => $term) {
+            $suggestedUses[] = $term->name;
+        }
+
+        $suggestedUses = json_encode($suggestedUses); //n.b. PHP 5.2 and above
+
         // we should unpack the geojson as it's not properly stored. my bad but hopefully easy to fix..
         $new_data = array(
-            'id'        => $data['ID'],
-            'title'     => $data['post_title'],
-            'content'   => $data['post_content'],
-            'excerpt'   => $data['post_excerpt'],
-            'geo_json'  => $data['geo_json'],
-            'area_type' => get_the_terms( $data['ID'], 'area-type' )[0]->name,
-            'image'     => $thumb[0]
+            'id'             => $data['ID'],
+            'title'          => $data['post_title'],
+            'content'        => $data['post_content'],
+            'excerpt'        => $data['post_excerpt'],
+            'geo_json'       => $data['geo_json'],
+            'area_type'      => get_the_terms( $data['ID'], 'area-type' )[0]->name,
+            'suggested_uses' => $suggestedUses,
+            'image'          => $thumb[0]
         );
 
         return $new_data;

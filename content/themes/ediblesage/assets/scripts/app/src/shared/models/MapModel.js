@@ -38,6 +38,7 @@ angular.module('App.Common')
                 data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
                 data.geo_json.properties.body  = data.content;
                 data.geo_json.properties.image = data.image;
+                data.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
                 return data;
             };
 
@@ -57,7 +58,8 @@ angular.module('App.Common')
              * store the text data for the geojson to be combined
              * with geojson for posting to map
              */
-            self.storeDetails = function(title, details, type, imageId) {
+            self.storeDetails = function(title, details, type, imageId, suggestedUses) {
+                self.newPlot.suggestedUses = createArrayStringFromObjectBool(suggestedUses);
                 self.newPlot.title = title;
                 self.newPlot.content_raw = details;
                 self.newPlot.areatype = type;
@@ -81,7 +83,7 @@ angular.module('App.Common')
 
             // this shouldn't be here
             // to-do: move this to a template somewhere easy to edit
-            self.popUpFormat = function(name, body, area_type, image) {
+            self.popUpFormat = function(name, body, area_type, image, suggestedUses) {
                 var retval = '';
 
                 retval += name + '<hr/>';
@@ -90,9 +92,13 @@ angular.module('App.Common')
                     retval += "<img src='"+image+"'/>";
                 }
                 retval += body + '<hr/>';
-                retval += area_type;
+                retval += area_type + '<br/>';
 
-                return retval;
+                suggestedUses.forEach(function(use){
+                    retval += " " + use + ' :';
+                });
+
+                return retval.slice(0, - 1);
             };
 
             // ----------------------------- private methods ----------------------------- //
@@ -112,5 +118,29 @@ angular.module('App.Common')
 
                 return coordinates;
             }
+
+            /**
+             * createArrayStringFromObjectBool : the checkboxes give us an object where keys
+             *  are the 'category terms' with either true or false if they are to be included
+             *  so we convert it to an string with just the 'category terms'.
+             * @param  {Object}        : suggestedUses
+             * @return {string}        : comma delimeted string
+             */
+            function createArrayStringFromObjectBool(suggestedUses) {
+                // create empty string
+                var suggestedUsesArray = '';
+                // get object keys
+                var keys = Object.keys(suggestedUses);
+
+                keys.forEach(function(key){
+                    if(suggestedUses[key]){// if value is true add key to an array
+                        suggestedUsesArray += key += ',';
+                    }
+                });
+
+                // return string
+                return suggestedUsesArray.slice(0,-1); // chop of trailing comma
+            }
+
 
         }]);

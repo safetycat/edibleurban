@@ -1,6 +1,6 @@
 <div ng-app="App">
-    <a href="#/peterborough">Peterborough</a> | 
-    <a href="#/newcastle">Newcastle</a> | 
+    <a href="#/peterborough">Peterborough</a> |
+    <a href="#/newcastle">Newcastle</a> |
     <a href="#/dallas">Dallas</a> |
     <a href="wordpress/wp-admin/">Log In</a>
     <hr />
