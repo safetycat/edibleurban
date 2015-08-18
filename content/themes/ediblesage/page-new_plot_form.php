@@ -1,9 +1,8 @@
+<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
 <!-- ok so general rule is don't touch anything with ng- prefix -->
 <!-- whatever else is cool -->
 <!-- sorry about the messy code for doing the columns -->
 <!-- you can probably do this with sass much easier?? -->
-
-<div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
