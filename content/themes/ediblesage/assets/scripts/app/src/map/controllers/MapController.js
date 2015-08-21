@@ -19,11 +19,11 @@ angular.module('App.Map')
 
     // to-do : move this stuff into database somehow
     var colourLookUp = {
-      'Vacant land'    : '#880000',
-      'Grass'          : '#008800',
-      'Tarmac'         : '#000088',
-      'Car park'       : '#888800',
-      'Rooftop'        : '#008888',
+      'Aquaponics'    : '#880000',
+      'Closed Roads'  : '#008800',
+      'Indoor Farming': '#000088',
+      'Public Space'  : '#888800',
+      'Roof Tops'      : '#008888',
       'Road'           : '#880088',
       'Wall'           : '#888888'
     };
