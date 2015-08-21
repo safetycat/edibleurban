@@ -1,11 +1,15 @@
 <script type="text/ng-template" id="map_popup">
 <div>
-{{name}}
-<hr />
-{{image ? "<img src='" : ""}} {{image}} {{image ? "'/>" : ""}}
-{{body}}
-<hr />
-{{area_type}} <br />
-{{suggestedUses}}
+    <div>{{name}}</div>
+    <hr />
+    <div>
+        {{image ? "<img src='" : ""}} {{image}} {{image ? "'/>" : ""}}
+        {{body}}
+    </div>
+    <hr />
+    <div>
+        {{area_type}} <br />
+        {{suggestedUses}}
+    </div>
 </div>
 </script>
