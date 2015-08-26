@@ -186,7 +186,7 @@ angular.module('App.Map')
     function addPlotToMap(plot) {
       L.geoJson( plot.geo_json, {
         style         : function() {
-          return {color: colourLookUp[plot.area_type] || '#ff69b4'};
+          return {color: colourLookUp[plot.area_type] || '#000000'};  // if no land type specified make it black
         },
         onEachFeature : function(feature, layer) {
           if (feature.properties && feature.properties.name) {
