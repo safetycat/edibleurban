@@ -23,6 +23,7 @@ angular.module('App.Common')
              * (to-do: we probably should do this string->json conversion on the server)
              */
             self.unpackReturnedPlot = function(data) {
+                data.geo_json[0] = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
                 data.geo_json = JSON.parse(data.geo_json);
                 // data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
                 data.geo_json.properties.body  = data.content;
