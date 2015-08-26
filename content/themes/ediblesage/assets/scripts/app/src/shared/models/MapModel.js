@@ -19,23 +19,12 @@ angular.module('App.Common')
             };
 
             /**
-             * parses geojson data and correctly formats for leaflet
-             * takes all the plots and changes them in place does not
-             * create new variable
-             * @param  {json} plots : geojson data from server
-             * @return {json} plots : geojson data for leaflet
-             */
-            self.prepareData = function(plots) {
-
-            };
-
-            /**
              * which prepares the data (as the meta field in wordpress stores it as a string)
              * (to-do: we probably should do this string->json conversion on the server)
              */
             self.unpackReturnedPlot = function(data) {
                 data.geo_json = JSON.parse(data.geo_json);
-                data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
+                // data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
                 data.geo_json.properties.body  = data.content;
                 data.geo_json.properties.image = data.image;
                 data.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
@@ -94,7 +83,7 @@ angular.module('App.Common')
 
                 // start and end point must match exactly so add the first point as the last
                 coordinates.push(coordinates[0]);
-                coordinates = '['+JSON.stringify(coordinates)+']'; // stringify for posting
+                coordinates = [coordinates]; // stringify for posting
 
                 return coordinates;
             }
