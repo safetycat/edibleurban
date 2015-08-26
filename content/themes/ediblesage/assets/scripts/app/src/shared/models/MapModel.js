@@ -9,7 +9,7 @@ angular.module('App.Common')
             $http.defaults.headers.post['X-WP-Nonce'] = CONFIG.api_nonce;
 
             self.fetchPlots = function() {
-                return $http.get($rootScope.api + '/posts?type=plots');  // to-do lift this constant into a service
+                return $http.get($rootScope.api + '/posts?type=plots&filter[posts_per_page]=-1');  // to-do lift this constant into a service
                 // so you don't need to inject scope
             };
 
