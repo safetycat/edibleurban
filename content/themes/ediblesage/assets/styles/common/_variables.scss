@@ -1,9 +1,40 @@
 // Glyphicons font path
 $icon-font-path:        "../fonts/";
 
+// FONTS
+
+@mixin font-helv() {
+    font-family: 'Helvetica Neue', Helvetica,'liberation_sansregular', Arial, sans-serif;
+    font-weight: 300;
+    font-kerning: normal;
+}
+
+    
+
+
 // Grid settings
 $main-sm-columns:       12;
 $sidebar-sm-columns:    4;
 
-// Colors
-$brand-primary:         #27ae60;
+/* HOUSE COLORS */
+$brand-primary:         #cccc99;
+$dark: #333 ; //nearly black 
+$pale: #f7f7f7 ; //nearly white
+
+$art: #cccc33;
+$consult: #6699cc;
+$academic: #669933;
+$maps: #cc9933;
+$other: #977FBD;
+
+
+
+/* Change grid sizing to 960 */
+$grid-gutter-width:         20px !default;
+$half-gutter: $grid-gutter-width/2 ;
+
+// Small screen / tablet
+$container-tablet:             (920px + $grid-gutter-width) !default;
+
+// Large screen / wide desktop
+$container-large-desktop:      (940px + $grid-gutter-width) !default;

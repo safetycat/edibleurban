@@ -1,0 +1,115 @@
+.banner {
+    border-bottom: 0;
+    margin-bottom: 20px !important;
+}
+
+.brand {
+  max-width: 50%;
+    margin: 15px 0 10px;
+ 
+ }
+  .navbar-brand {height: auto;}
+.navbar-default .navbar-brand{
+    font-size: 30px;
+    font-weight: 600;
+    //width: 200px;
+    line-height: 1em;
+}
+.blogdesc{clear: left;font-weight: 600;}
+
+.row {
+    // margin-left: 0;
+    // margin-right: 0;
+}
+
+
+
+.menu {list-style: none;}
+
+.navbar-default {// reset bootstrap ones using same class
+    background-color: transparent;
+    border-color: white;
+    margin-bottom: 0;
+
+    .navbar-brand{
+        color: $dark;
+        &:focus, &:hover {
+
+        }
+    }
+    .navbar-nav{
+    
+        @include font-helv();
+        li a {
+            color: $dark;
+            font-size: 11px;
+            font-weight: 400;
+            background-color: $consult;
+        }
+        li:nth-child(2) a { background-color: $academic;}
+        li:nth-child(3) a { background-color: $art;}
+        li:nth-child(4) a{ background-color: $maps;}
+        li:nth-child(5) a{ background-color: $other;}
+
+        li a:hover {
+        background: silver;     
+        border-color: white;
+        }
+        // override bootstrap nav-default colours.
+         > .active > a, 
+         > .active > a:focus, 
+         > .active > a:hover {
+        background: silver;
+        color: black;
+        border-color: white;
+        }
+
+    }
+}
+
+
+
+// Map style black numbers under nav
+.banner li{
+/*    counter-increment: menu-counter;*/
+    list-style-type: none;
+
+    &::after {
+        display: block;
+        margin-top: 0.8em;
+
+        content: "";
+        height: 8px;
+        left: 0;
+        // position: absolute;
+        // top: 37px;
+        width: 100%;
+        border-top: 3px solid black;
+        border-left:1px solid black;
+        font-size: 9px;
+        padding-left: 3px;
+
+        //counter
+        content: counter(menu-counter, decimal) ".";
+        counter-increment: menu-counter; 
+
+
+    }
+
+    &:first-child::after {
+        border-left: 2px solid black;
+     }
+
+    &:last-child::after {
+    border-right: 2px solid black;
+    }
+
+ }
+
+
+/* Counters */
+
+body {
+  counter-reset: menu-counter;
+}
+

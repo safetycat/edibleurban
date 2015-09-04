@@ -30,3 +30,19 @@ foreach ($sage_includes as $file) {
   require_once $filepath;
 }
 unset($file, $filepath);
+
+
+//add classes to menus
+function special_nav_class($classes, $item){
+    // $menu_locations = get_nav_menu_locations();
+
+    // if ( has_term($menu_locations['home-menu'], 'nav_menu', $item) ||  has_term($menu_locations['sitemap'], 'nav_menu', $item)  ) {
+    //      if (0 == $item->menu_item_parent) { //makes sure not added to sub-menus
+    //        $classes[] = "col-sm-3";
+    //    }
+    //  }
+
+    return $classes;
+}
+
+add_filter('nav_menu_css_class' , 'special_nav_class' , 90 , 2);

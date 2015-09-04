@@ -14,6 +14,10 @@ angular.module('App.Map')
             bindToController : true,
             template         : '<div></div>',
             replace          : true,
-            link             : function(scope, element, attrs, MapController) { MapController.init( element ); }
+            link             : function(scope, element, attrs, MapController) {
+                $('.primary_nav ul li').removeClass('active');
+                $('.primary_nav ul li a[href="'+window.location.hash+'"]').parent().addClass('active');
+                MapController.init( element );
+            }
         };
     });

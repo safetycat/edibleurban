@@ -55,7 +55,9 @@ angular.module('App.Map')
       addTileLayer(map);                            // load the custom tileset for the project
 
       drawnItems  = createDrawnItemsLayer(map);     // create a layer to put the drawn items on
+
       map.addLayer(drawnItems);                     // add the new later to the map
+
       if(CONFIG.logged_in){
         drawControls = createDrawControl(drawnItems); // initialise the draw controls
         map.addControl(drawControls);                 // add the control to the map

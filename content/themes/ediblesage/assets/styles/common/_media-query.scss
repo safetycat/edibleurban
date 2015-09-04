@@ -1,0 +1,36 @@
+
+
+
+ // ==========  Mobile First Method  ==========
+ 
+    /* Custom, iPhone Retina */
+
+    @media only screen and (min-width : 320px){ }
+ 
+    /* Extra Small Devices, Phones */
+    @media only screen and (min-width : 480px){ }
+
+    /* Small Devices, Tablets */
+    @media only screen and (min-width : 768px){
+
+         .navbar-nav{
+            float: right;
+        }
+    }
+    
+    /* Medium Devices, Desktops */
+    @media only screen and (min-width : 992px){ 
+        .container-fluid {max-width: 940px;}
+        .navbar-header {    
+            //max-width: 50%;
+        }
+         .home-image, .intro {
+           // height: 390px;
+        }
+    }
+ 
+    /* Large Devices, Wide Screens */
+    @media only screen and (min-width : 1200px){ 
+        .container-fluid {max-width: 960px;}
+
+    }
