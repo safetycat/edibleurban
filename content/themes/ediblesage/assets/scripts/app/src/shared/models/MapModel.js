@@ -49,14 +49,16 @@ angular.module('App.Common')
              * with geojson for posting to map
              */
             self.storeDetails = function(title, details, type, imageId, suggestedUses) {
-                self.newPlot.suggestedUses = createArrayStringFromObjectBool(suggestedUses);
-                self.newPlot.title = title;
-                self.newPlot.content_raw = details;
-                self.newPlot.areatype = type;
+                self.newPlot.title         = title;
+                self.newPlot.content_raw   = details;
+                self.newPlot.areatype      = type;
                 self.newPlot.plot.properties.name = title;
                 self.newPlot.plot.properties.body = details;
                 self.newPlot.plot.properties.areatype = type;
                 self.newPlot.imageId = imageId;
+                if(suggestedUses) {
+                    self.newPlot.suggestedUses = createArrayStringFromObjectBool(suggestedUses);
+                }
             };
 
             self.storePoints = function(e) {
