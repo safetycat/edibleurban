@@ -107,8 +107,10 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
         $suggestedUsesTerms = get_the_terms( $data['ID'], 'suggested-use' );
         $suggestedUses      = array();
 
-        foreach ($suggestedUsesTerms as $key => $term) {
-            $suggestedUses[] = $term->name;
+        if($suggestedUsesTerms) {
+            foreach ($suggestedUsesTerms as $key => $term) {
+                $suggestedUses[] = $term->name;
+            }
         }
 
         $suggestedUses = json_encode($suggestedUses); //n.b. PHP 5.2 and above
