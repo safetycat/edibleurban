@@ -296,9 +296,9 @@ class WP_JSON_Posts {
 			return $post;
 		}
 
-		foreach ( $post['meta']['links'] as $rel => $url ) {
-			$response->link_header( $rel, $url );
-		}
+		// foreach ( $post['meta']['links'] as $rel => $url ) {
+		// 	$response->link_header( $rel, $url );
+		// }
 
 		$response->link_header( 'alternate',  get_permalink( $id ), array( 'type' => 'text/html' ) );
 		$response->set_data( $post );
