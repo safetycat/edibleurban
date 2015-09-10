@@ -18,10 +18,10 @@ angular.module('App.Map')
 
     // to-do : move this stuff into database somehow
     var colourLookUp = {
-      'Aquaponics'    : '#880000',
-      'Closed Roads'  : '#008800',
-      'Indoor Farming': '#000088',
-      'Public Space'  : '#888800',
+      'Aquaponics'     : '#880000',
+      'Closed Roads'   : '#008800',
+      'Indoor Farming' : '#000088',
+      'Public Space'   : '#888800',
       'Roof Tops'      : '#008888',
       'Road'           : '#880088',
       'Wall'           : '#888888'
@@ -30,60 +30,71 @@ angular.module('App.Map')
     // ----------------------------- public methods ----------------------------- //
 
     /**
-     * initialises leaflet
+     * initialises leaflet, effectively a constructor
      * @param  {jQuery} el jQuery wrapped DOM element where the map will go
      */
     self.init = function(el) {
-      var map,          // leaflet map object
-          plots,        // geojson for map objects
-          drawnItems,   // a map layer the newly drawn items are added to
-          drawControls, // some tools added to the map to enable drawing
+      var map,                           // leaflet map object
+          plots,                         // geojson for map objects
+          drawnItems,                    // a map layer the newly drawn items are added to
+          drawControls,                  // some tools added to the map to enable drawing
           location = $routeParams.place; // store paramater from url
 
       var startPos = locationLookUp[location] || [52.57, -0.25]; // default to peterborough.
 
-      // store a reference to this object with the event bus object
-      // to enable map to modal controller messaging
-      EventBus.storeMapRef(self);
+      EventBus.storeMapRef(self);                     // store a reference to this object with the event bus object
+                                                      // to enable map to modal controller messaging
 
-      // instance the map
-      map = L.map(el[0],{
-          scrollWheelZoom : false
-      }).setView(startPos, 15);               // set view to our chosen geographical coordinates and zoom level
+      map = L.map(el[0],{                             // instance the map
+        scrollWheelZoom : false
+      }).setView(startPos, 15);                       // set view to our chosen geographical coordinates and zoom level
 
-      addTileLayer(map);                            // load the custom tileset for the project
+      addTileLayer(map);                              // load the custom tileset for the project
 
-      drawnItems  = createDrawnItemsLayer(map);     // create a layer to put the drawn items on
+      drawnItems = new L.featureGroup();              // create a layer to put the drawn items on
+      map.addLayer(drawnItems);                       // add the new later to the map
 
-      map.addLayer(drawnItems);                     // add the new later to the map
-
-      if(CONFIG.logged_in){
-        drawControls = createDrawControl(drawnItems); // initialise the draw controls
+      if(CONFIG.logged_in) {
+        drawControls = createDrawControl(drawnItems); // initialise the draw controls (if logged in)
         map.addControl(drawControls);                 // add the control to the map
       }
-      // add event handlers
-      map.on('draw:created', self.onDrawCreated);
 
-      // get plot data and put onto map
-      nowGetPlots(map);
-      self.map = map; // thought I wouldn't have to do this but I was wrong.
+      // add other controls..... //
+
+      map.on('draw:created', self.onDrawCreated);     // add event handlers
+
+      // -------------------------- setup listener for plot changes in model ------------------- //
+      $scope.$watch(
+        function () {
+          return MapModel.plots;
+        },
+        function(newVal, oldVal) {
+          if(newVal.length > 0) {
+            renderPlots(map);
+          }
+        }, true);
+
+      nowGetPlots(map);                               // get plot data and put onto map
     };
+
 
     /**
      * modal controller sends a reference
-     * to itself via event bus
+     * pointing back to itself via event bus
+     * so we can message the modal
      * @param {controller} modal : modal controller
      */
     self.setModalRefence = function(modal) {
       self.modal = modal;
     };
 
+
     /**
+     * ++ called from the modal (save button) via the event bus ++
      * when a new plot is posted it is stored by the server
-     * and put in the server. this gives it an id. the
+     * and put in the database. this gives it an id. the
      * new plot object complete with id is returned from the
      * server and then added to the map using this method
-     * ultimately called from the modal (save button) via the event bus
      */
     self.addNewPostReturnedPlot = function(data) {
       var plot = MapModel.unpackReturnedPlot(data);
@@ -91,11 +102,14 @@ angular.module('App.Map')
       addPlotToMap(plot);
     };
 
+
     // ----------------------------- event handlers ----------------------------- //
+
     self.onDrawCreated = function(e) {
-        self.modal.open(); // get the text data by opening a modal with form in
-        MapModel.storePoints(e);
+      self.modal.open(); // get the text data by opening a modal with form in
+      MapModel.storePoints(e);
     };
+
 
     // ----------------------------- private methods ----------------------------- //
 
@@ -107,18 +121,9 @@ angular.module('App.Map')
     function addTileLayer(map) {
       L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.18d897de/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg',
           {
-            id          : 'hello'
+            id : 'hello'
           }
       ).addTo(map);
-    }
-
-    /**
-     * initialise the drawnItems FeatureGroup to store editable shapes and add it to the map on a new layer
-     * @param {leaflet object} map - basically the instance of leaflet
-     */
-    function createDrawnItemsLayer(map) {
-      var drawnItems = new L.featureGroup();
-      return drawnItems;
     }
 
     /**
@@ -126,6 +131,7 @@ angular.module('App.Map')
      * @param {leaflet object} drawnItems -a leaflet map layer that stores the drawn items
      */
     function createDrawControl(drawnItems) {
+
       var drawControl = new L.Control.Draw({
         draw: {
             polyline : false,
@@ -156,6 +162,82 @@ angular.module('App.Map')
       return drawControl;
     }
 
+    // function createSearchControl() {
+
+    //   L.Control.Search = L.Control.extend({
+    //     options : {
+    //       position   : 'topright',
+    //       placeholder: 'Search....'
+    //     },
+    //     initialize : {
+    //       // constructor
+    //       L.Util.setOptions(this,options);
+    //     },
+    //     onAdd : function(map){
+    //       // happens after added to map
+    //       var container = L.DomUtil.create('div','search-container');
+    //       this.form = L.DomUtil.create('form','form', container);
+
+    //       var group = L.DomUtil.create('div','form-group',this.form);
+    //       this.input = L.DomUtil.create('input','form-control input-sm',group);
+    //       this.input.type = 'text';
+    //       this.input.placeholder = this.options.placeholder;
+    //       this.results = L.DomUtil.create('div','list-group',group);
+
+    //       L.DomEvent.addListener(this.input, 'keyup', _.debounce(this.keyup, 300), this);
+    //       L.DomEvent.addListener(this.form, 'submit', this.submit, this);
+    //       L.DomEvent.disableClickPropagation(container);
+    //       return container;
+    //     },
+    //     onRemove : function(map){
+    //       // when removed
+    //       L.DomEvent.removeListener(this._input, 'keyup', this.keyup, this);
+    //       L.DomEvent.removeListener(form, 'submit', this.submit, this);
+    //     },
+    //     keyup:function(e) {
+    //       if(e.keyCode === 38 || e.keyCode === 40) {
+    //         // do nothing
+    //       } else {
+    //         this.results.innerHTML = '';
+    //         if(this.input.value.length > 2) {
+    //           var value = this.input.value;
+    //           var results = _.take(_.filter(this.options.data, function(x){
+    //             return x.feature.properties.part.toUpperCase().indexOf(value.toUpperCase()) > -1;
+    //           }).sort(sortParks), 10);
+    //           _.map(results, function(x){
+    //             var a = L.DomUtil.create('a', 'list-group-item');
+    //             a.href = '';
+    //             a.setAttribute('data-result-name', x.feature.properties.park);
+    //             a.innerHTML = x.feature.properties.park;
+    //             this.results.appendChild(a);
+    //             L.DomEvent.addListener(a, 'click', this.itemSelected, this);
+    //             return a;
+    //           }, this);
+    //         }
+    //       }
+    //     },
+    //     itemSelected: function(e) {
+    //       L.DomEvent.preventDefault(e);
+    //       var elem  = e.target;
+    //       var value = elem.innerHTML;
+    //       this.input.value = elem.getAttributes('data-result-name');
+    //       var feature = _.find(this.options.data, function(x){
+    //         return x.feature.properties.park === this.input.value;
+    //       }, this);
+    //       if(feature) {
+    //         this._map.fitBounds(feature.getBounds());
+    //       }
+    //       this.results.innerHTML = '';
+    //     },
+    //     submit: function(e) {
+    //       L.DomEvent.preventDefault(e);
+    //     }
+    //   });
+
+    //   L.control.search = functon(id,options) {
+    //     return new L.Control.Search(id,options);
+    //   }
+    // }
 
     /**
      * calls httpget and passes results through to unpackReturnedPlot
