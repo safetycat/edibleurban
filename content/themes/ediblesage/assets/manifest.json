@@ -8,7 +8,7 @@
         "scripts/app/src/shared/Shared.js",
         "scripts/app/src/shared/EventBus.js",
         "scripts/app/src/shared/ImageUploader.js",
-        "scripts/app/src/shared/models/MapModel.js",
+        "scripts/app/src/map/model/MapModel.js",
         "scripts/app/src/map/Map.js",
         "scripts/app/src/map/controllers/ModalController.js",
         "scripts/app/src/map/directives/ModalDirective.js",

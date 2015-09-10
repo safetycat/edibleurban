@@ -1,12 +1,11 @@
 // scripts/app/src/map/controllers/MapController.js
 
 angular.module('App.Map')
-  .controller('MapController', ['$routeParams', '$templateCache', '$interpolate', 'MapModel', 'EventBus', function($routeParams, $templateCache, $interpolate, MapModel, EventBus){
+  .controller('MapController', ['$scope','$routeParams', '$templateCache', '$interpolate', 'MapModel', 'EventBus', function($scope, $routeParams, $templateCache, $interpolate, MapModel, EventBus){
 
     // ----------------------------- properties ----------------------------- //
 
     var self  = this; // usual JS pointer to controller context
-    self.map = {}; // we will store a reference to the leaflet object here
 
     var popUpTemplate = $interpolate($templateCache.get('map_popup'));  // we need this to pass a html string to leaflet to define popup content
 
@@ -164,29 +163,35 @@ angular.module('App.Map')
      * the controller init thread ends here
      */
     function nowGetPlots(map) {
-        MapModel.fetchPlots().then(function(xhr) {
+      MapModel.fetchPlots().then(
+        function addPlotsToMap(xhr) { // we do this when the plots arrive from the server
+          var plots = xhr.data;
+          MapModel.setPlots(plots);
+        }
+      );
+      // now we're just waiting for the plots
+      // when they arrive we'll do the function
+      // in the 'then' part (addPlotsToMap) which adds the plots to
+      // the model
+    }
 
-              // we do this when the plots arrive from the server
-              var plots = xhr.data;
-              plots.forEach(function(data){
-                  var plot = MapModel.unpackReturnedPlot(data);
-                  MapModel.addNew(plot);
-                  addPlotToMap(plot);
-              });
-
-        });
-        // now we're just waiting for the plots
-        // when they arrive we'll do the function
-        // in the 'then' part which adds the plots to
-        // the map
+    function renderPlots(map) {
+      var plots = MapModel.getPlots();
+      plots.forEach(
+        function(data){
+          var plot = MapModel.unpackPlot(data);
+          createPlot(plot).addTo(map);
+        }
+      );
     }
 
     /**
-     * adds a single plot to the map and binds the feature.properties to the popup content
-     * @param {geojson object} plot
+     * creates a single plot and binds the feature.properties to the popup content
+     * @param  {geojson object} plot
+     * @return {GeoJSON layer}
      */
-    function addPlotToMap(plot) {
-      L.geoJson( plot.geo_json, {
+    function createPlot(plot) {
+      return L.geoJson( plot.geo_json, {
         style         : function() {
           return {color: colourLookUp[plot.area_type] || '#000000'};  // if no land type specified make it black
         },
@@ -205,7 +210,7 @@ angular.module('App.Map')
              layer.bindPopup(popUpContent);
           }
         }
-      } ).addTo(self.map);
+      } );
     }
 
   }]);

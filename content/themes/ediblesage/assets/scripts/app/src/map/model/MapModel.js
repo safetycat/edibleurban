@@ -20,16 +20,17 @@ angular.module('App.Common')
 
             /**
              * which prepares the data (as the meta field in wordpress stores it as a string)
+             * this is a bit of a mess :-(
              * (to-do: we probably should do this string->json conversion on the server)
              */
-            self.unpackReturnedPlot = function(data) {
-                data.geo_json = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
-                data.geo_json = JSON.parse(data.geo_json);
-                // data.geo_json.geometry.coordinates = JSON.parse(data.geo_json.geometry.coordinates);
-                data.geo_json.properties.body  = data.content;
-                data.geo_json.properties.image = data.image;
-                data.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
-                return data;
+            self.unpackPlot = function(data) {
+                var plot = {};
+                plot.geo_json = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
+                plot.geo_json = JSON.parse(data.geo_json);
+                plot.geo_json.properties.body  = data.content;
+                plot.geo_json.properties.image = data.image;
+                plot.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
+                return plot;
             };
 
             /**
@@ -42,6 +43,22 @@ angular.module('App.Common')
 
             self.addNew = function(plot) {
                 self.plots.push(plot);
+            };
+
+            /**
+             * this method updates all the plots it's called straight after
+             * the plots are initially fetched from the server
+             * @param {JSON array} plots : array of plot objects
+             */
+            self.setPlots = function(plots) {
+              // manage angular's BS two way binding cycle
+              if($rootScope.$root.$$phase !== '$apply' && $rootScope.$root.$$phase !== '$digest'){
+                $rootScope.$apply(function() {
+                  self.plots = plots;
+                });
+              } else {
+                self.plots = plots;
+              }
             };
 
             /**
