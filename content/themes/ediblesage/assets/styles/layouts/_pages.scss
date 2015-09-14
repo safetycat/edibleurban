@@ -13,5 +13,15 @@
 }
 
 .leaflet-popup-content hr {
+    margin-top: 0;
     clear: both;
+}
+
+.leaflet-popup-content .category {
+    font-weight: 500;
+}
+
+.leaflet-popup-content .popup-content {
+    margin-right: 10px;
+    width: auto !important;
 }
