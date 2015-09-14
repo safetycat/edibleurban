@@ -17,15 +17,7 @@ angular.module('App.Map')
     };
 
     // to-do : move this stuff into database somehow
-    var colourLookUp = {
-      'Aquaponics'     : '#880000',
-      'Closed Roads'   : '#008800',
-      'Indoor Farming' : '#000088',
-      'Public Space'   : '#888800',
-      'Roof Tops'      : '#008888',
-      'Road'           : '#880088',
-      'Wall'           : '#888888'
-    };
+    var colourLookUp = CONFIG.suggested_use;
 
     // ----------------------------- public methods ----------------------------- //
 
@@ -261,8 +253,9 @@ angular.module('App.Map')
       var plots = MapModel.getPlots();
       plots.forEach(
         function(data){
+          var type = data.area_type;
           var plot = MapModel.unpackPlot(data);
-          createPlot(plot).addTo(map);
+          createPlot(plot, type).addTo(map);
         }
       );
     }
@@ -272,10 +265,10 @@ angular.module('App.Map')
      * @param  {geojson object} plot
      * @return {GeoJSON layer}
      */
-    function createPlot(plot) {
+    function createPlot(plot, type) {
       return L.geoJson( plot.geo_json, {
         style         : function() {
-          return {color: colourLookUp[plot.area_type] || '#000000'};  // if no land type specified make it black
+          return {color: colourLookUp[type] || '#000000', opacity: 100, weight: 5};  // if no land type specified make it black
         },
         onEachFeature : function(feature, layer) {
           if (feature.properties && feature.properties.name) {
@@ -284,7 +277,7 @@ angular.module('App.Map')
               var popUpContent = popUpTemplate( {
                 name          : feature.properties.name,
                 body          : body,
-                area_type     : plot.area_type,
+                area_type     : type,
                 image         : image,
                 suggestedUses : feature.properties.suggestedUses.toString()
               } );

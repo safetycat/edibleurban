@@ -31,6 +31,21 @@ foreach ($sage_includes as $file) {
 }
 unset($file, $filepath);
 
+/**
+ * converts wordpress terms object to a json of slug:colour
+ * @param  [object] $terms [from wordpress get_terms object]
+ * @return [JSON string]   [json string of term->slug and colour]
+ */
+function termsColoursJson($terms) {
+  $termsColoursJson = "{";
+
+  if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+    foreach ( $terms as $term ) {
+      $termsColoursJson .= "'".$term->slug."':'#000000',";
+    }
+  }
+  return $termsColoursJson."}";
+}
 
 //add classes to menus
 function special_nav_class($classes, $item){
