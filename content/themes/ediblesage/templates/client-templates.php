@@ -8,8 +8,8 @@
     </div>
     <hr />
     <div>
-        {{area_type}} <br />
-        {{suggestedUses}}
+        {{area_type ? "<span class='category'>Area Type:</span>" : ""}} {{area_type}} <br />
+        {{suggestedUses ? "<span class='category'>Suggested Uses:</span>" : ""}} {{suggestedUses}}
     </div>
 </div>
 </script>

@@ -147,7 +147,7 @@ function edible_api_init($server) {
     $edibleUrban_API_Plot->register_filters();
 
     // we don't need all that extra data in the post
-    global $wp_json_posts, $wp_json_pages, $wp_json_media, $wp_json_taxonomies;
+    global $wp_json_posts, $wp_json_pages, $wp_json_users, $wp_json_media, $wp_json_taxonomies;
     remove_filter( 'json_prepare_post',    array( $wp_json_users, 'add_post_author_data' ), 10);
     remove_filter( 'json_prepare_post',    array( $wp_json_media, 'add_thumbnail_data' ), 10);
 }
@@ -204,7 +204,9 @@ function edible_post_ammend( $data, $post, $context ) {
         $suggestedUses = json_encode($suggestedUses); //n.b. PHP 5.2 and above
 
         $data['suggested_uses'] = $suggestedUses;
-        $data['area_type']      = get_the_terms( $post['ID'], 'area-type' )[0]->name;
+        if(get_the_terms( $post['ID'], 'area-type' )[0]){
+            $data['area_type']  = get_the_terms( $post['ID'], 'area-type' )[0]->name;
+        }
         $data['geo_json']       = get_post_meta( $post['ID'] )['map_data'];
 
         if( has_post_thumbnail($post['ID']) ) {

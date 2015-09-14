@@ -1,3 +1,16 @@
 #map {
     height: 650px;
 }
+
+.leaflet-popup-content img {
+    float: left;
+    margin-right: 5px;
+}
+
+.leaflet-popup-content > div {
+    width: 260px;
+}
+
+.leaflet-popup-content hr {
+    clear: both;
+}
