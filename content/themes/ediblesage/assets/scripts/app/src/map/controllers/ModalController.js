@@ -37,7 +37,7 @@ angular.module('App.Map')
 
       var fd = new FormData();
       fd.append('file',file);
-      self.dialogue.feedback = "Uploading " + file.name + " please wait...";
+      self.dialogue.feedback = "Uploading " + file.name + " ***** PLEASE WAIT  *****";
       // block button while uploading [cheating for now as it seems a m.p.i.t.a.]
       $("#modal-save").hide('slow');
       // n.b. we pass also file.name as in chrome FormData does not support all features
