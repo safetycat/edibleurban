@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="map_popup">
 <div>
-    <div>{{name}}</div>
+    <div><h3>{{name}}</h3></div>
     <hr />
     <div>
         {{image ? "<img src='" : ""}} {{image}} {{image ? "'/>" : ""}}
