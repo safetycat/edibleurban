@@ -27,6 +27,7 @@ angular.module('App.Common')
                 var plot = {};
                 plot.geo_json = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
                 plot.geo_json = JSON.parse(data.geo_json);
+                plot.geo_json.properties.name  = data.title;
                 plot.geo_json.properties.body  = data.content;
                 plot.geo_json.properties.image = data.image;
                 plot.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
