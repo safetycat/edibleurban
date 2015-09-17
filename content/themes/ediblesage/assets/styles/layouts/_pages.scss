@@ -19,3 +19,25 @@
 .leaflet-popup-content .category {
     font-weight: 900;
 }
+
+.intro-text {
+    position: relative;
+    -webkit-transition: max-height 0.8s;
+    -moz-transition: max-height 0.8s;
+    transition: max-height 0.8s;
+}
+
+.intro-text .intro-text_close_open {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    padding: 5px;
+    border: 0px;
+    max-height: 500px;
+}
+
+.minimised {
+    max-height: 12px;
+    overflow: hidden;
+    color: #f5f5f5;
+}
