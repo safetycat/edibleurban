@@ -111,7 +111,7 @@ angular.module('App.Map')
      * @param {leaflet object} map - basically the instance of leaflet
      */
     function addTileLayer(map) {
-      L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.18d897de/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg',
+      L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.o2ii1n61/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg',
           {
             id : 'hello'
           }
@@ -268,7 +268,7 @@ angular.module('App.Map')
     function createPlot(plot, type) {
       return L.geoJson( plot.geo_json, {
         style         : function() {
-          return {fillColor: colourLookUp[type] || '#000000', opacity: 1, color: 'red', weight:1, fillOpacity: 0.9 };  // if no land type specified make it black
+          return {fillColor: colourLookUp[type] || '#000000', opacity: 1, color: 'red', weight:1, fillOpacity: 0.4 };  // if no land type specified make it black
         },
         onEachFeature : function(feature, layer) {
           if (feature.properties && feature.properties.name) {
