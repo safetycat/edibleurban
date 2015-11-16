@@ -268,7 +268,7 @@ angular.module('App.Map')
     function createPlot(plot, type) {
       return L.geoJson( plot.geo_json, {
         style         : function() {
-          return {fillColor: colourLookUp[type] || '#000000', opacity: 1, color: 'red', weight:1, fillOpacity: 0.4 };  // if no land type specified make it black
+          return {fillColor: colourLookUp[type] || '#000000', opacity: 1, color: 'red', weight:1, fillOpacity: 0.6 };  // if no land type specified make it black
         },
         onEachFeature : function(feature, layer) {
           if (feature.properties && feature.properties.name) {
