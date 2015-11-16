@@ -5,6 +5,7 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
      * Associated post type
      * all this is built from the documentation here
      * http://wp-api.org/guides/extending.html
+     * to-do upgrade this to v2 of wp-api but be careful it's a lot of work
      * @var string Type slug
      */
     protected $type = 'plots';
