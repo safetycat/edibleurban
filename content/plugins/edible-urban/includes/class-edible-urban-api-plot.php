@@ -20,7 +20,6 @@ class EdibleUrban_API_Plot extends WP_JSON_CustomPostType {
         );
 
         return $routes;
-
     }
 
     /**

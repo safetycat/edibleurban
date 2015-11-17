@@ -11,10 +11,23 @@ class WPAPP_THEME {
 
         add_action( 'wp_enqueue_scripts', array( $this, 'angularScripts' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'leafletScripts' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'mapboxScripts'  ) );
+
     }
 
     function wpApp_baseScripts() {
 
+    }
+
+    public function mapboxScripts() {
+        // USING CDN
+        wp_enqueue_script(
+            'MapBox',
+            '//api.mapbox.com/mapbox.js/v2.2.3/mapbox.js',
+            array( 'LeafletCore' ),
+            null,
+            false
+        );
     }
 
     public function leafletScripts() {
@@ -29,7 +42,7 @@ class WPAPP_THEME {
         wp_enqueue_script(
             'LeafletDraw',
             '//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.js',
-            array( 'LeafletCore' ),
+            array( 'MapBox' ),
             null,
             false
         );
