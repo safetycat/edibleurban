@@ -232,8 +232,10 @@ angular.module('App.Map')
      * the controller init thread ends here
      */
     function nowGetPlots(map) {
+      $('.spinner').removeClass('hidden');       // *hack* shows spinner
       MapModel.fetchPlots().then(
-        function addPlotsToMap(xhr) { // we do this when the plots arrive from the server
+        function addPlotsToMap(xhr) {   // we do this when the plots arrive from the server
+          $('.spinner').fadeOut( "slow");      // *hack* hides spinner
           var plots = xhr.data;
           MapModel.setPlots(plots);
         }

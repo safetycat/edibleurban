@@ -2,6 +2,15 @@
     height: 650px;
 }
 
+.spinner {
+    padding: 15px;
+    border-radius: 4px;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+    margin-bottom: 5px;
+}
+
 .leaflet-popup-content img {
     float: left;
     margin-right: 5px;
