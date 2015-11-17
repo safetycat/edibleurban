@@ -15,6 +15,12 @@
     suggested_use: {'Green Space'    : '#96c25d', 'Indoor Space' : '#d28cba', 'Pavement or pedestrian area' : '#eac1c0', 'Public Space' : '#eaaf24', 'Rooftop' : '#aedce7', 'Tarmac' : '#f4cda3', 'Vacant Land' : '#858e93' }
   };
   </script>
+  <style>
+  .leaflet-control-layers .leaflet-control-layers-list, .leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+    display: block;
+    position: relative;
+  }
+  </style>
   <?php wp_head(); ?>
 </head>
 

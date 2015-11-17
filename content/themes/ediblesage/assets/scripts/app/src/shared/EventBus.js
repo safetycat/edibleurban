@@ -30,9 +30,4 @@ angular.module('App.Common')
                 bus.map.setModalRefence(modal);
             };
 
-            // called when modal is closed and succefully posted new data
-            bus.addNewToMap = function(plot) {
-                bus.map.addNewPostReturnedPlot(plot);
-            };
-
         });

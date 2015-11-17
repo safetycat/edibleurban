@@ -79,8 +79,13 @@ angular.module('App.Map')
           self.detailsForm.$setPristine();
           self.detailsForm.$setUntouched();
           self.newPlot = {};
-
-          EventBus.addNewToMap(xhr.data); // and inform maps
+          // when a new plot is posted it is stored by the server
+          // and put in the database. this gives it an id. the
+          // new plot object complete with id is returned from the
+          // server and then added to the map model using this method
+          MapModel.addNew(xhr.data);
+          // updates and additions to the map model automatically trigger a rendering function
+          // renderPlots() in map controller
         }
       );
 
