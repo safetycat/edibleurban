@@ -12,7 +12,7 @@ angular.module('App.Map')
     var locationLookUp = {
       'peterborough' : [52.57  ,  -0.25],
       'newcastle'    : [54.975 ,  -1.61],
-      'dallas'       : [32.884054, -96.753051]
+      'dallas'       : [32.875, -96.760]
     };
 
     // to-do : move this stuff into database somehow
