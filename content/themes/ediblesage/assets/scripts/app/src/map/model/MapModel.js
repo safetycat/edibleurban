@@ -19,23 +19,18 @@ angular.module('App.Common')
             };
 
             /**
-             * which prepares the data (as the meta field in wordpress stores it as a string)
+             * which prepares the geojson data (as the meta field in wordpress stores it as a string)
              * this is a bit of a mess :-(
              * (to-do: we probably should do this string->json conversion on the server)
              */
             self.unpackPlot = function(data) {
                 var plot = {};
-                if(typeof data.geo_json[0] === 'string') {
-                  plot.geo_json = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
-                  plot.geo_json = JSON.parse(data.geo_json);
-                  plot.geo_json.properties.name  = data.title;
-                  plot.geo_json.properties.body  = data.content;
-                  plot.geo_json.properties.image = data.image;
-                  plot.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
-                } else {
-                  // data returned from the json post doesn't have geo_json encoded in a string to don't need to parse
-                 plot.geo_json = data.geo_json;
-                }
+                plot.geo_json = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
+                plot.geo_json = JSON.parse(data.geo_json);
+                plot.geo_json.properties.name  = data.title;
+                plot.geo_json.properties.body  = data.content;
+                plot.geo_json.properties.image = data.image;
+                plot.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
                 return plot;
             };
 

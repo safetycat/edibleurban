@@ -88,21 +88,6 @@ angular.module('App.Map')
       self.modal = modal;
     };
 
-
-    /**
-     * ++ called from the modal (save button) via the event bus ++
-     * when a new plot is posted it is stored by the server
-     * and put in the database. this gives it an id. the
-     * new plot object complete with id is returned from the
-     * server and then added to the map using this method
-     */
-    self.addNewPostReturnedPlot = function(data) {
-      var plot = MapModel.unpackPlot(data);
-      MapModel.addNew(plot);
-      // addPlotToMap(plot);
-    };
-
-
     // ----------------------------- event handlers ----------------------------- //
 
     self.onDrawCreated = function(e) {
@@ -259,6 +244,11 @@ angular.module('App.Map')
       // the model
     }
 
+    /**
+     * this method bound to map model and is called any time the 
+     * map model data changes
+     * @param  {object} map : Leaflet map object
+     */
     function renderPlots(map) {
       var plots = MapModel.getPlots();
       plots.forEach(
