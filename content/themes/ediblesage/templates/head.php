@@ -5,6 +5,7 @@
   <!-- move to some kind of enque css -->
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.css" />
+  <link rel='stylesheet' href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' />
   <script type="text/javascript"> // this could move to a seperate file
   window.CONFIG = {
     api_url      : "<?php echo esc_url_raw(get_json_url()); ?>",

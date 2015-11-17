@@ -6,7 +6,6 @@ angular.module('App.Map')
     // ----------------------------- properties ----------------------------- //
 
     var self  = this; // usual JS pointer to controller context
-
     var popUpTemplate = $interpolate($templateCache.get('map_popup'));  // we need this to pass a html string to leaflet to define popup content
 
     // to-do : move this stuff into database somehow
@@ -25,23 +24,32 @@ angular.module('App.Map')
      * initialises leaflet, effectively a constructor
      * @param  {jQuery} el jQuery wrapped DOM element where the map will go
      */
-    self.init = function(el) {
-      var map,                           // leaflet map object
-          plots,                         // geojson for map objects
-          drawnItems,                    // a map layer the newly drawn items are added to
-          drawControls,                  // some tools added to the map to enable drawing
-          location = $routeParams.place; // store paramater from url
+    self.init = function($el) {
 
+      EventBus.storeMapRef(self);         // store a reference to this object with the event bus object
+                                          // to enable map to modal controller messaging
+
+      var map;                            // leaflet map object
+      var plots;                          // geojson for map objects
+
+      var drawnItems;                     // a map layer the newly drawn items are added to
+      var drawControls;                   // some tools added to the map to enable drawing
+
+      var location = $routeParams.place;  // store paramater from url
       var startPos = locationLookUp[location] || [52.57, -0.25]; // default to peterborough.
 
-      EventBus.storeMapRef(self);                     // store a reference to this object with the event bus object
-                                                      // to enable map to modal controller messaging
+      L.mapbox.accessToken = 'pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg'; // access token for mapbox
 
-      map = L.map(el[0],{                             // instance the map
+      map = L.mapbox.map('map', null, {               // instance the map
         scrollWheelZoom : false
       }).setView(startPos, 15);                       // set view to our chosen geographical coordinates and zoom level
 
-      addTileLayer(map);                              // load the custom tileset for the project
+      var layers = addTileLayers(L.mapbox.accessToken);
+
+      layers.Map.addTo(map);                          // add the custom tileset for the project
+
+
+      L.control.layers(layers).addTo(map);            // add layer switching control
 
       drawnItems = new L.featureGroup();              // create a layer to put the drawn items on
       map.addLayer(drawnItems);                       // add the new later to the map
@@ -110,12 +118,14 @@ angular.module('App.Map')
      * set the URL template - todo pull this out into a constant
      * @param {leaflet object} map - basically the instance of leaflet
      */
-    function addTileLayer(map) {
-      L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.o2ii1n61/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg',
-          {
-            id : 'hello'
-          }
-      ).addTo(map);
+    function addTileLayers(token) {
+
+      var layers = {
+          Map: L.tileLayer('https://{s}.tiles.mapbox.com/v4/safetycat.o2ii1n61/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic2FmZXR5Y2F0IiwiYSI6Ill4U0t4Q1kifQ.24VprC0A7MUNYs5HbhLAAg'),
+          Satellite: L.mapbox.tileLayer('mapbox.satellite')
+      };
+
+      return layers;
     }
 
     /**
