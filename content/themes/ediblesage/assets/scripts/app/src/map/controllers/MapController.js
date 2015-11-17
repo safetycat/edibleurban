@@ -97,9 +97,9 @@ angular.module('App.Map')
      * server and then added to the map using this method
      */
     self.addNewPostReturnedPlot = function(data) {
-      var plot = MapModel.unpackReturnedPlot(data);
+      var plot = MapModel.unpackPlot(data);
       MapModel.addNew(plot);
-      addPlotToMap(plot);
+      // addPlotToMap(plot);
     };
 
 

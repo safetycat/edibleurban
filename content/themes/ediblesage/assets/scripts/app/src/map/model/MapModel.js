@@ -25,12 +25,17 @@ angular.module('App.Common')
              */
             self.unpackPlot = function(data) {
                 var plot = {};
-                plot.geo_json = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
-                plot.geo_json = JSON.parse(data.geo_json);
-                plot.geo_json.properties.name  = data.title;
-                plot.geo_json.properties.body  = data.content;
-                plot.geo_json.properties.image = data.image;
-                plot.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
+                if(typeof data.geo_json[0] === 'string') {
+                  plot.geo_json = data.geo_json[0].replace(/\\"/g, '"');  // have to delete the escape slashes that wordpress puts in the json
+                  plot.geo_json = JSON.parse(data.geo_json);
+                  plot.geo_json.properties.name  = data.title;
+                  plot.geo_json.properties.body  = data.content;
+                  plot.geo_json.properties.image = data.image;
+                  plot.geo_json.properties.suggestedUses = JSON.parse(data.suggested_uses);
+                } else {
+                  // data returned from the json post doesn't have geo_json encoded in a string to don't need to parse
+                 plot.geo_json = data.geo_json;
+                }
                 return plot;
             };
 
